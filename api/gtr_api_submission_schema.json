@@ -1,0 +1,3384 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://submit.ncbi.nlm.nih.gov/gtr/v0.0.1/test.schema.json",
+    "title": "GTR test submission",
+    "description": "GTR API submission schema",
+    "type": "object",
+    "oneOf": [
+        {
+            "required": ["humanTest"]
+        },
+        {
+            "required": ["microbeTest"]
+        },
+        {
+            "required": ["testDeletion"]
+        }
+    ],
+    "properties": {
+        "humanTest": {
+            "description": "Human clinical test - add or update",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "action",
+                "labTestName",
+                "testPurposes",
+                "testPerformanceLocations",
+                "methods",
+                "analyticalValidity",
+                "testTargetsAssociated"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "description": "Value to add a new test or update an existing test.",
+                    "enum": [
+                        "add",
+                        "update"
+                    ]
+                },
+                "gtrAccession": {
+                    "$ref": "#/definitions/gtrAccessionType",
+                    "description": "GTR accession number, for an existing GTR test."
+                },
+                "labTestName": {
+                    "description": "The name of the test to be displayed in GTR.",
+                    "type": "string"
+                },
+                "testOrderCode": {
+                    "description": "The test order code, commonly found on the laboratory's requisition form, test menu or test catalog.",
+                    "type": "string"
+                },
+                "labTestShortName": {
+                    "description": "Shortened name or mneumonic used by the lab to identify the test.",
+                    "type": "string"
+                },
+                "manufactureTestName": {
+                    "description": "The manufacturer's name for the test, if a commercial test or kit was used.",
+                    "type": "string"
+                },
+                "testURL": {
+                    "type": "string",
+                    "description": "The URL for the test.",
+                    "format": "uri"
+                },
+                "searchTerms": {
+                    "description": "Keywords by which users can search for the test.",
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "testPurposes": {
+                    "description": "Purpose of the test",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Diagnosis",
+                            "Drug Response",
+                            "Monitoring",
+                            "Mutation Confirmation",
+                            "Pre-implantation genetic diagnosis",
+                            "Pre-symptomatic",
+                            "Predictive",
+                            "Prognostic",
+                            "Recurrence",
+                            "Risk Assessment",
+                            "Screening",
+                            "Therapeutic management"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "targetPopulation": {
+                    "description": "Segment(s) of the population that should be tested for the condition or phenotype and why.",
+                    "type": "string"
+                },
+                "citationsForTargetPopulation": {
+                    "description": "Citations supporting statements provided in 'Target population for this test'; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "fdaReviews": {
+                    "description": "Has the test been reviewed by the FDA?",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "reviewed": {"type": "boolean"},
+                            "noReviewCategoryDesignation": {
+                                "description": "If no FDA review, FDA category designation",
+                                "type": "string",
+                                "enum": [
+                                    "FDA exercises enforcement discretion",
+                                    "Not Applicable"
+                                ]
+                            },
+                            "reviewCategoryDesignation": {
+                                "type": "string",
+                                "description": "If FDA review, FDA category designation.",
+                                "enum": [
+                                    "IUO - Investigational Use Only. The performance characteristics of this product have not been established.",
+                                    "IVD - In Vitro Device.",
+                                    "RUO - Research Use Only. Not for use in diagnostic procedures."
+                                ]
+                            },
+                            "reviewItem": {
+                                "description": "If FDA reviewed, item under reviewed.",
+                                "type": "string",
+                                "enum": [
+                                    "ASR - Analyte Specific Reagent(s)",
+                                    "Assay(s)",
+                                    "IVDMIA - In Vitro Diagnostic Multivariate Index Assay(s)",
+                                    "Instrument(s)",
+                                    "Test kit(s)"
+                                ]
+                            },
+                            "otherReviewItem": {
+                                "type": "string",
+                                "description": "Value if FDA reviewed item is not in the item enum list."
+                            },
+                            "regulatoryStatus": {
+                                "description": "If FDA reviewed, FDA regulatory status from enum list.",
+                                "type": "string",
+                                "enum": [
+                                    "FDA cleared/approved",
+                                    "FDA exempt",
+                                    "Not submitted",
+                                    "Pending"
+                                ]
+                            },
+                            "otherRegulatoryStatus": {
+                                "type": "string",
+                                "description": "Value if fdaRegulatoryStatus value is not in the status enum list."
+                            },
+                            "fdaApplicationNumber": {
+                                "type": "string",
+                                "description": "If FDA reviewed, FDA application number."
+                            }
+                        },
+                        "additionalProperties": false,
+                        "if": {
+                            "properties": {
+                                "reviewed": {"const": true}
+                            }
+                        },
+                        "then": {
+                            "allOf": [
+                                {
+                                    "oneOf": [
+                                        {
+                                            "required": ["reviewItem"]
+                                        },
+                                        {
+                                            "required": ["otherReviewItem"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "oneOf": [
+                                        {
+                                            "required": ["regulatoryStatus"]
+                                        },
+                                        {
+                                            "required": ["otherRegulatoryStatus"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "required": ["reviewCategoryDesignation"]
+                                }
+                            ]
+                        },
+                        "not": {
+                            "required": [
+                                "reviewCategoryDesignation",
+                                "noReviewCategoryDesignation"
+                            ]
+                        }
+                    }
+                },
+                "nysClep": {
+                    "description": "NYS Clinical Laboratory Evaluation Program",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "NYS CLEP status",
+                            "enum": [
+                                "Approved",
+                                "Exempt",
+                                "Grandfathered",
+                                "Pending"
+                            ]
+                        },
+                        "testApprovalNumber": {
+                            "description": "NYS CLEP test approval number",
+                            "type": "string"
+                        }
+                    }
+                },
+                "testDevelopment": {
+                    "description": "Information about how the test is developed.",
+                    "type": "string",
+                    "enum": [
+                        "FDA-reviewed (has FDA test name)",
+                        "Manufactured (research use only; not FDA-reviewed)",
+                        "Modified FDA (has FDA-reviewed entry, but with lab modifications/field changes)",
+                        "Test developed by laboratory (no manufacturer test name)"
+                    ]
+                },
+                "howToOrder": {
+                    "description": "Description of the test ordering procedure.",
+                    "type": "string"
+                },
+                "orderURL": {
+                    "description": "The URL for ordering the test.",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "whoCanOrder": {
+                    "description": "One or more types of individuals able to order the test.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Genetic Counselor",
+                            "Health Care Provider",
+                            "In-State Patients",
+                            "Licensed Dentist",
+                            "Licensed Physician",
+                            "Nurse Practitioner",
+                            "Out-of-State Patients",
+                            "Physician Assistant",
+                            "Public Health Mandate",
+                            "Registered Nurse"
+                        ]
+                    }
+                },
+                "testCodeURL": {
+                    "description": "The URL for information on codes (e.g. CPT, ICD-9, ICD-10).",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "loincCodes": {
+                    "description": "Logical Observation Identifiers Names and Codes.",
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "cptCodes": {
+                    "description": "Molecular pathology Current Procedural Terminology (CPT®) code - 'MoPath' code - from the American Medical Association (AMA) that describes the test.",
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "informedConsentRequired": {
+                    "description": "Whether the lab reqires informed consent prior to performing the test.",
+                    "type": "string",
+                    "enum": [
+                        "Decline to answer",
+                        "Required",
+                        "Not required",
+                        "Based on applicable state law"
+                    ]
+                },
+                "pretestGeneticCounselingRequired": {
+                    "description": "Requirement by the laboratory for genetic counseling prior to performing the test.",
+                    "type": "string",
+                    "enum": [
+                        "Decline to answer",
+                        "Required",
+                        "Not required"
+                    ]
+                },
+                "posttestGeneticCounselingRequired": {
+                    "description": "Requirement by the laboratory for genetic counseling after performing the test in order to release the test results.",
+                    "type": "string",
+                    "enum": [
+                        "Decline to answer",
+                        "Required",
+                        "Not required"
+                    ]
+                },
+                "testServices": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "testService": {
+                                "description": "Laboratory service that is offered in conjunction with the test, from enum list",
+                                "type": "string",
+                                "enum": [
+                                    "Clinical Testing/Confirmation of Mutations Identified Previously",
+                                    "Confirmation of research findings",
+                                    "Custom Balanced Chromosome Rearrangement Studies",
+                                    "Custom Deletion/Duplication Testing",
+                                    "Custom Sequence Analysis",
+                                    "Data Storage and Backup",
+                                    "Genetic counseling",
+                                    "Identity Testing",
+                                    "Marker Chromosome Identification",
+                                    "Maternal cell contamination study (MCC)",
+                                    "Preimplantation Genetic Diagnosis (PGD)",
+                                    "Result interpretation",
+                                    "Specimen Source Identification",
+                                    "Uniparental Disomy (UPD) Testing",
+                                    "X-Chromosome Inactivation Studies"
+                                ]
+                            },
+                            "otherService": {
+                                "type": "string",
+                                "description": "Value if test service is not in the enum list."
+                            },
+                            "orderCode": {
+                                "description": "Order code for test service",
+                                "type": "string"
+                            },
+                            "comment": {
+                                "description": "Helpful information regarding the test service, e.g. how to request the service",
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "oneOf": [
+                            {
+                                "required": ["testService"]
+                            },
+                            {
+                                "required": ["otherService"]
+                            }
+                        ]
+                    }
+                },
+                "testAdditionalServices": {
+                    "description": "Additional test service offered in conjunction with the test.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "additionalService": {
+                                "description": "If applicable, additional laboratory service from enum list.",
+                                "type": "string",
+                                "enum": [
+                                    "Custom Prenatal Testing",
+                                    "Custom mutation-specific/Carrier testing"
+                                ]
+                            },
+                            "orderCode": {
+                                "description": "Order code for additional test service",
+                                "type": "string"
+                            },
+                            "comment": {
+                                "description": "Enter helpful information regarding the test service, such as how to request the service, limitations, etc.",
+                                "type": "string"
+                            }
+                        },
+                        "required": ["additionalService"]
+                    }
+                },
+                "specimen": {
+                    "description": "Specimen sample allowed for the test.",
+                    "type": "object",
+                    "properties": {
+                        "sources": {
+                            "type": "array",
+                            "description": "Specimen sample source, from enum list",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Amniocytes",
+                                    "Amniotic fluid",
+                                    "Bone marrow",
+                                    "Buccal swab",
+                                    "Buffy coat",
+                                    "Cell culture",
+                                    "Cell-free DNA",
+                                    "Cerebrospinal fluid",
+                                    "Chorionic villi",
+                                    "Cord blood",
+                                    "Cystic hygroma fluid",
+                                    "Dried blood spot (DBS) card",
+                                    "Fetal blood",
+                                    "Fibroblasts",
+                                    "Fresh tissue",
+                                    "Frozen tissue",
+                                    "Isolated DNA",
+                                    "Nasal aspirates",
+                                    "Nasopharyngeal washes",
+                                    "Oropharyngeal swab",
+                                    "Paraffin block",
+                                    "Peripheral (whole) blood",
+                                    "Plasma",
+                                    "Product of conception (POC)",
+                                    "Saliva",
+                                    "Serum",
+                                    "Skin",
+                                    "Sputum",
+                                    "Urine",
+                                    "White blood cell prep"
+                                ]
+                            }
+                        },
+                        "otherSource": {"type": "string"},
+                        "url": {
+                            "description": "The URL at lab's website that describes specimen requirements and/or collection protocol.",
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "testingStrategy": {
+                    "description": "Description of the clinical testing strategy, not the test procedure; can include prior testing requirements",
+                    "type": "string"
+                },
+                "citationsForTestingStrategy": {
+                    "description": "Citations for the testing strategy/algorithm; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://).",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "testContactPolicies": {
+                    "description": "Laboratory policy regarding who may contact lab (e.g., patients and/or health care providers) and when during the testing process the laboratory will discuss tests with patients.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Laboratory can only accept contact from health care providers. Patients/families are encouraged to discuss genetic testing options with their health care provider.",
+                            "Post-test email/phone consultation regarding genetic test results and interpretation is provided to patients/families.",
+                            "Pre-test email/phone consultation regarding genetic test results and interpretation is provided to patients/families."
+                        ]
+                    }
+                },
+                "testContactPersons": {
+                    "type": "array",
+                    "items": {
+                        "description": "Lab person name in the format: first-name last-name. The lab person should be in the lab personnel list.",
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "testPerformanceLocations": {
+                    "description": "Locations for test performance.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Entire test performed in-house",
+                            "Interpretation performed at an outside lab",
+                            "Interpretation performed both in-house and at an outside lab",
+                            "Interpretation performed in-house",
+                            "Report generated at an outside lab",
+                            "Report generated both in-house and at an outside lab",
+                            "Report generated in-house",
+                            "Specimen preparation performed at an outside lab",
+                            "Specimen preparation performed both in-house and at an outside lab",
+                            "Specimen preparation performed in-house",
+                            "Wet lab work performed at an outside lab",
+                            "Wet lab work performed both in-house and at an outside lab",
+                            "Wet lab work performed in-house"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "commentForTestPerformanceLocation": {
+                    "description": "If any part of the test is performed externally, a description about where it is performed and any other information.",
+                    "type": "string"
+                },
+                "methods": {
+                    "description": "Set of method category and primary methodology used in the test; the major method categories for the test which will be inferred from the methodCategory are: (1) Molecular Genetics, (2) Biochemical Genetics, and (3) Cytogenetics.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "methodCategory": {
+                                "description": "General category to which the test method belongs",
+                                "$ref": "#/definitions/humanTestMethodCategoryEnum"
+                            },
+                            "method": {
+                                "description": "Primary methodology for the test",
+                                "$ref": "#/definitions/humanTestMethodEnum"
+                            },
+                            "otherMethod": {
+                                "type": "string",
+                                "description": "Value if method is not in the method enum list."
+                            },
+                            "instruments": {
+                                "description": "Instrument(s) used for the method.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Name of instrument used.",
+                                            "$ref": "#/definitions/humanTestInstrumentEnum"
+                                        },
+                                        "otherInstrument": {
+                                            "type": "string",
+                                            "description": "Value if the instrument used is not in the instrument enum list."
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "oneOf": [
+                                        {
+                                            "required": ["name"]
+                                        },
+                                        {
+                                            "required": ["otherInstrument"]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "required": ["methodCategory"]
+                            },
+                            {
+                                "oneOf": [
+                                    {
+                                        "required": ["method"]
+                                    },
+                                    {
+                                        "required": ["otherMethod"]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "platforms": {
+                    "description": "The platform used for the test, usually a commercial product (catalog number or set of numbers) with pre-defined test targets used in the test.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of commercial platform or kit with predefined test targets.",
+                                "$ref": "#/definitions/humanTestPlatformEnum"
+                            },
+                            "otherPlatform": {
+                                "type": "string",
+                                "description": "Value if platform used is not in the enum list."
+                            }
+                        },
+                        "additionalProperties": false,
+                        "oneOf": [
+                            {
+                                "required": ["name"]
+                            },
+                            {
+                                "required": ["otherPlatform"]
+                            }
+                        ]
+                    }
+                },
+                "testProcedureOrProtocol": {
+                    "description": "Summary of the methodology, including specific steps for each method used in the assay.",
+                    "type": "string"
+                },
+                "citationsForTestProcedureOrProtocol": {
+                    "description": "Citations supporting the test protocol; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "testResultsConfirmation": {
+                    "description": "Information about whether results are confirmed and if so, how.",
+                    "type": "string"
+                },
+                "testComment": {
+                    "description": "Optional textual description of the test.",
+                    "type": "string"
+                },
+                "analyticalValidity": {
+                    "description": "Quantitative information about analytical sensitivity, analytical specificity, accuracy, and/or precision of this test.",
+                    "type": "string"
+                },
+                "citationsForAnalyticalValidity": {
+                    "description": "Citations supporting the analytical validity statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "clinicalValidity": {
+                    "description": "Clinical sensitivity and specificity, description of the population(s) assessed, and the number of specimens used to calculate clinical validity.",
+                    "type": "string"
+                },
+                "citationsForClinicalValidity": {
+                    "description": "Citations used to evaluate the clinical validity of the test; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "assayLimitations": {
+                    "description": "Test limitations that affect the value of the test for its intended use, such as the limit of detection and test restrictions.",
+                    "type": "string"
+                },
+                "citationsForAssayLimitations": {
+                    "description": "Citations supporting the assay limitation statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "clinicalUtilities": {
+                    "description": "Likelihood of the test to significantly improve patient outcomes.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "description": "Clinical utility category value",
+                                "type": "string",
+                                "enum": [
+                                    "Avoidance of invasive testing",
+                                    "Establish or confirm diagnosis",
+                                    "Guidance for management",
+                                    "Guidance for selecting a drug therapy and/or dose",
+                                    "Lifestyle planning",
+                                    "Predictive risk information for patient and/or family members",
+                                    "Reproductive decision-making",
+                                    "Sufficient research has not been conducted to demonstrate the utility of the test"
+                                ]
+                            },
+                            "otherCategory": {
+                                "type": "string",
+                                "description": "Value if category is not in the enum list."
+                            },
+                            "url": {
+                                "description": "The URL to display references to support a clinical utility choice.",
+                                "type": "string",
+                                "format": "uri"
+                            },
+                            "citations": {"$ref": "#/definitions/citationsType"}
+                        },
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "oneOf": [
+                                    {
+                                        "required": ["category"]
+                                    },
+                                    {
+                                        "required": ["otherCategory"]
+                                    }
+                                ]
+                            },
+                            {
+                                "anyOf": [
+                                    {
+                                        "required": ["url"]
+                                    },
+                                    {
+                                        "required": ["citations"]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "testTargetsAssociated": {
+                    "description": "Category describing the condition(s)/phenotype(s) associated with the test target(s) in the test",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "conditionsOrPhenotypes": {
+                                "$ref": "#/definitions/humanTestConditionsOrPhenotypes"
+                            },
+                            "origins": {
+                                "description": "For a given condition or phenotype, whether the test target is germline or somatic or both.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Germline",
+                                        "Somatic"
+                                    ]
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            },
+                            "targetsTested": {
+                                "description": "The analytes, chromosomal or mitochondrial regions, genes and variations, or proteins that are measured in the test.",
+                                "type": "object",
+                                "properties": {
+                                    "genes": {
+                                        "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "analytes": {
+                                        "description": "Name of analyte",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "chromosomalRegionOrMitochondrions": {
+                                        "description": "Chromosomal region/mitochondrion (for example, '11q15' or 'm.7446-m.7514')",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "proteins": {
+                                        "description": "Protein; example, 'Hemoglobin subunit beta' or 'Adenomatous polyposis coli protein'",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "geneWithVariants": {
+                                        "description": "Relevant gene variant; format is HGVS expression (preferred), or the allele name.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "gene": {
+                                                    "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                                    "type": "string"
+                                                },
+                                                "variant": {"type": "string"},
+                                                "variantClinicalSignificance": {
+                                                    "description": "Value for clinical significance of variant from enum list",
+                                                    "$ref": "#/definitions/clinicalSignificanceEnum"
+                                                },
+                                                "citationsForClinicalSignificance": {
+                                                    "description": "Citations used to support the clinical significance of the variant; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                                                    "$ref": "#/definitions/citationsType"
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "gene",
+                                                "variant"
+                                            ],
+                                            "if": {
+                                                "required": ["citationsForClinicalSignificance"]
+                                            },
+                                            "then": {
+                                                "required": ["variantClinicalSignificance"]
+                                            }
+                                        }
+                                    },
+                                    "geneWithRefSeqAndExons": {
+                                        "description": "Relevant reference sequences and exons for each associated reference sequence.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "gene": {
+                                                    "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                                    "type": "string"
+                                                },
+                                                "refSeq": {
+                                                    "description": "Associated reference sequence.",
+                                                    "type": "string"
+                                                },
+                                                "exons": {
+                                                    "description": "For exon range, example 3, 5, 9-12; f the range includes all exons, add (All), example 1-5 (All); if a subset is tested, enumerate the exons tested.",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "gene",
+                                                "refSeq"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "additionalProperties": false,
+                                "oneOf": [
+                                    {
+                                        "required": ["analytes"]
+                                    },
+                                    {
+                                        "required": ["chromosomalRegionOrMitochondrions"]
+                                    },
+                                    {
+                                        "required": ["genes"]
+                                    },
+                                    {
+                                        "required": ["proteins"]
+                                    },
+                                    {
+                                        "required": ["geneWithVariants"]
+                                    },
+                                    {
+                                        "required": ["geneWithRefSeqAndExons"]
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "conditionsOrPhenotypes",
+                            "origins",
+                            "targetsTested"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "testTargetUnassociated": {
+                    "description": "Category describing condition(s)/phenotype(s) and/or test target(s) that are not associated",
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "conditionsOrPhenotypes": {
+                                "$ref": "#/definitions/humanTestConditionsOrPhenotypes"
+                            },
+                            "origins": {
+                                "description": "For a given condition or phenotype, whether the test target is germline or somatic or both.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Germline",
+                                        "Somatic"
+                                    ]
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            },
+                            "targetsTested": {
+                                "description": "The analytes, chromosomal or mitochondrial regions, genes and variations, or proteins that are measured in the test.",
+                                "type": "object",
+                                "properties": {
+                                    "genes": {
+                                        "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "analytes": {
+                                        "description": "Name of analyte",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "chromosomalRegionOrMitochondrions": {
+                                        "description": "Chromosomal region/mitochondrion (for example, '11q15' or 'm.7446-m.7514')",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "proteins": {
+                                        "description": "Protein; example, 'Hemoglobin subunit beta' or 'Adenomatous polyposis coli protein'",
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "geneWithVariants": {
+                                        "description": "Relevant gene variant; format is HGVS expression (preferred), or the allele name.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "gene": {
+                                                    "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                                    "type": "string"
+                                                },
+                                                "variant": {"type": "string"},
+                                                "variantClinicalSignificance": {
+                                                    "description": "Value for clinical significance of variant from enum list",
+                                                    "$ref": "#/definitions/clinicalSignificanceEnum"
+                                                },
+                                                "citationsForClinicalSignificance": {
+                                                    "description": "Citations used to support the clinical significance of the variant; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                                                    "$ref": "#/definitions/citationsType"
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "gene",
+                                                "variant"
+                                            ],
+                                            "if": {
+                                                "required": ["citationsForClinicalSignificance"]
+                                            },
+                                            "then": {
+                                                "required": ["variantClinicalSignificance"]
+                                            }
+                                        }
+                                    },
+                                    "geneWithRefSeqAndExons": {
+                                        "description": "Relevant reference sequences and exons for each associated reference sequence.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "gene": {
+                                                    "description": "Gene, example, 'CDKN2A' or 'CFTR'",
+                                                    "type": "string"
+                                                },
+                                                "refSeq": {
+                                                    "description": "Associated reference sequence.",
+                                                    "type": "string"
+                                                },
+                                                "exons": {
+                                                    "description": "For exon range, example 3, 5, 9-12; f the range includes all exons, add (All), example 1-5 (All); if a subset is tested, enumerate the exons tested.",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "gene",
+                                                "refSeq"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "additionalProperties": false,
+                                "anyOf": [
+                                    {
+                                        "required": ["analytes"]
+                                    },
+                                    {
+                                        "required": ["chromosomalRegionOrMitochondrions"]
+                                    },
+                                    {
+                                        "required": ["genes"]
+                                    },
+                                    {
+                                        "required": ["proteins"]
+                                    },
+                                    {
+                                        "required": ["geneWithVariants"]
+                                    },
+                                    {
+                                        "required": ["geneWithRefSeqAndExons"]
+                                    }
+                                ]
+                            }
+                        },
+                        "anyOf": [
+                            {"required": ["conditionsOrPhenotypes"]},
+                            {"required": ["targetsTested"]}
+                        ],
+                        "required": ["origins"]
+                },
+                "vus": {
+                    "description": "Variant of Unknown Significance",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "protocolForInterpretingVariationAsVUS": {
+                            "description": "Method used by the lab to interpret a variation as VUS.",
+                            "type": "string"
+                        },
+                        "softwareUsedToInterpretNovelVariations": {
+                            "description": "Software used by the lab to interpret novel variations.",
+                            "type": "string"
+                        },
+                        "labPolicyOnReportingNovelVariations": {
+                            "description": "A description of how the lab reports novel variations.",
+                            "type": "string"
+                        },
+                        "areFamilyMembersRecruitedWithoutCharge": {
+                            "description": "Whether the lab offers testing for a variant of unknown significance to family members free of charge; for example, to affected individuals and/or presumed obligate carriers to help determine clinical significance of a VUS.",
+                            "type": "string",
+                            "enum": [
+                                "Not provided",
+                                "Yes",
+                                "No",
+                                "Decline to answer"
+                            ]
+                        },
+                        "commentsAboutRecruitingFamilyMembers": {
+                            "description": "Explanation of who is eligible to testing free of charge and how the lab does it; for example, is the testing offered to affected individuals and/or presumed obligate carriers to help determine clinical significance of a VUS.",
+                            "type": "string"
+                        },
+                        "willLabRecontactOrderingPhysicanIfVariantInterpretationChanges": {
+                            "description": "Whether the lab contacts the ordering physician after testing and initial report, if a variant interpretation changes.",
+                            "type": "string",
+                            "enum": [
+                                "Not provided",
+                                "Yes",
+                                "No",
+                                "Decline to answer"
+                            ]
+                        },
+                        "commentsAboutRecontactingOrderingPhysican": {
+                            "description": "An explanation about how the lab monitors and addresses reinterpretation of genetic tests results over time, after issuing the report; for example, time limit if any, whether the laboratory systematically re-evaluates prior interpretations and generate new reports, or whether the person ordering the test needs to periodically recontact the laboratory to inquire about changes in test interpretation.",
+                            "type": "string"
+                        },
+                        "researchPerformedAfterClinicalTestingIsComplete": {
+                            "description": "An explanation or information about any research testing being performed using the submitted sample; for example, research testing is allowed under IRB approved protocols or the patient would have to sign an informed consent for the research protocol; if the protocol is registered in clinicaltials.gov, you can enter that information here.",
+                            "type": "string"
+                        }
+                    }
+                },
+                "proficiencyTesting": {
+                    "description": "Periodic internal or external evaluation of the test to corroborate the accuracy of test results.",
+                    "type": "object",
+                    "properties": {
+                        "method": {
+                            "description": "The type of proficiency testing that is performed, from enum list. ",
+                            "type": "string",
+                            "enum": [
+                                "Alternative Assessment",
+                                "Formal PT program",
+                                "Inter-Laboratory",
+                                "Intra-Laboratory"
+                            ]
+                        },
+                        "otherMethod": {
+                            "type": "string",
+                            "description": "Value if method is not in the method enum list."
+                        },
+                        "methodDescription": {
+                            "description": "A description of the proficiency testing method used.",
+                            "type": "string"
+                        },
+                        "citationsForMethodDescription": {
+                            "description": "Citations to support the proficiency testing method statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                            "$ref": "#/definitions/citationsType"
+                        },
+                        "provider": {
+                            "description": "Provider for proficiency testing, from enum list.",
+                            "type": "string",
+                            "enum": [
+                                "American College of Medical Genetics / College of American Pathologists, ACMG/CAP",
+                                "American College of Physicians - Medical Laboratory Evaluation, ACP MLE",
+                                "Association for Molecular Pathology, AMP",
+                                "Belgian Official EKE Schemes, GLP Monitoring Programme",
+                                "Canadian External Quality Assessment Laboratory, CEQAL",
+                                "Centers for Disease Control and Prevention Newborn Screening Quality Assurance Program, CDC DLS",
+                                "Clinical Pathology Accreditation (UK) Ltd., CPA",
+                                "College of American Pathologists, CAP",
+                                "European Concerted Action on Thrombosis External Quality Assessment Program, ECAT EQAP",
+                                "European Molecular Genetics Quality Network, EMQN",
+                                "European Research Network for the Evaluation and Improvement of Screening Diagnosis and Treatment of Inherited Metabolic Disorders - External Quality Assessment Schemes, ERNDIM EQAS",
+                                "External Quality Assessment for Molecular Genetic Testing for Phenylketonuria, EQA-PKU",
+                                "Human Genetic Society of Australasia, HGSA",
+                                "Institute for Standardization and Documentation in the Medical Laboratory, INSTAND",
+                                "Pacific Northwest Regional Genetics Group, PacNoRGG",
+                                "Society for Inherited Metabolic Disorders, SIMD"
+                            ]
+                        },
+                        "otherProvider": {
+                            "type": "string",
+                            "description": "Value if provider is not in the provider enum list."
+                        }
+                    },
+                    "additionalProperties": false,
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "method",
+                                    "otherMethod"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "provider",
+                                    "otherProvider"
+                                ]
+                            }
+                        ]
+                    },
+                    "if": {
+                        "required": ["citationsForMethodDescription"]
+                    },
+                    "then": {
+                        "required": ["methodDescription"]
+                    }
+                },
+                "internalTestValidationMethod": {
+                    "description": "Explanation of how the lab validates the test.",
+                    "type": "string"
+                },
+                "citationsForInternalTestValidationMethod": {
+                    "description": "Citations to support internal test validation method statement; for PubMed ID use format 'PMID: 23193275';; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "caps": {
+                    "description": "Set of mjaor category, sub-category and test code to specify, if College of American Pathologists (CAP) is chosen as Provider for proficiency testing.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "majorCapCategory": {
+                                "description": "Category to specify, if College of American Pathologists (CAP) is chosen as Provider for proficiency testing",
+                                "$ref": "#/definitions/majorCapCategoryEnum"
+                            },
+                            "capCategory": {
+                                "description": "Relevant sub-category, if major CAP category is selected.",
+                                "$ref": "#/definitions/capCategoryEnum"
+                            },
+                            "capTest": {
+                                "description": "Relevant test code, if major CAP category is selected.",
+                                "$ref": "#/definitions/capTestEnum"
+                            }
+                        }
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "action": {"const": "update"}
+                        }
+                    },
+                    "then": {
+                        "required": ["gtrAccession"]
+                    },
+                    "else": {
+                        "not": {
+                            "required": ["gtrAccession"]
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTargetPopulation"]
+                    },
+                    "then": {
+                        "required": ["targetPopulation"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTestingStrategy"]
+                    },
+                    "then": {
+                        "required": ["testingStrategy"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTestProcedureOrProtocol"]
+                    },
+                    "then": {
+                        "required": ["testProcedureOrProtocol"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForAnalyticalValidity"]
+                    },
+                    "then": {
+                        "required": ["analyticalValidity"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForClinicalValidity"]
+                    },
+                    "then": {
+                        "required": ["clinicalValidity"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForAssayLimitations"]
+                    },
+                    "then": {
+                        "required": ["assayLimitations"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForInternalTestValidationMethod"]
+                    },
+                    "then": {
+                        "required": ["internalTestValidationMethod"]
+                    }
+                }
+            ]
+        },
+        "microbeTest": {
+            "description": "Add or update a clinical microbe test.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "action",
+                "labTestName",
+                "testPurposes",
+                "testPerformanceLocations",
+                "methods",
+                "analyticalValidity",
+                "testTargets",
+                "conditionsOrPhenotypes"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "description": "Specify to add a new test or update an existing test.",
+                    "enum": [
+                        "add",
+                        "update"
+                    ]
+                },
+                "gtrAccession": {
+                    "$ref": "#/definitions/gtrAccessionType",
+                    "description": "If this test has been registered previously in the GTR, enter the GTR accession number here. This is required for update."
+                },
+                "labTestName": {
+                    "type": "string",
+                    "description": "The name of the test to be displayed in GTR."
+                },
+                "testOrderCode": {
+                    "type": "string",
+                    "description": "The test order code, commonly found on the laboratory's requisition form, test menu or test catalog."
+                },
+                "labTestShortName": {
+                    "type": "string",
+                    "description": "Shortened name or mneumonic used by the lab to identify the test."
+                },
+                "manufactureTestName": {
+                    "type": "string",
+                    "description": "The manufacturer's name for the test, if a commercial test or kit was used."
+                },
+                "testURL": {
+                    "type": "string",
+                    "description": "The URL for the test.",
+                    "format": "uri"
+                },
+                "searchTerms": {
+                    "type": "array",
+                    "description": "Keywords by which users can search for the test.",
+                    "items": {"type": "string"}
+                },
+                "testPurposes": {
+                    "type": "array",
+                    "description": "Purpose of the test.",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Diagnosis",
+                            "Drug Response",
+                            "Microbe identification",
+                            "Monitoring",
+                            "Predictive",
+                            "Recurrence",
+                            "Screening",
+                            "Therapeutic management",
+                            "Viral load"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "targetPopulation": {
+                    "type": "string",
+                    "description": "Segment(s) of the population that should be tested for the condition or phenotype and why."
+                    },
+                "citationsForTargetPopulation": {
+                    "description": "Citations supporting statements provided in 'Target population for this test'; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                "$ref": "#/definitions/citationsType"},
+                "fdaReviews": {
+                    "type": "array",
+                    "description": "Has the test been reviewed by the FDA?",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "reviewed": {"type": "boolean"},
+                            "noReviewCategoryDesignation": {
+                                "description": "If no FDA review, specify FDA category designation",
+                                "type": "string",
+                                "enum": [
+                                    "EUA - Emergency Use Authorization",
+                                    "FDA exercises enforcement discretion",
+                                    "Not Applicable"
+                                ]
+                            },
+                            "reviewCategoryDesignation": {
+                                "type": "string",
+                                "description": "If FDA review, specify FDA category designation",
+                                "enum": [
+                                    "IUO - Investigational Use Only. The performance characteristics of this product have not been established.",
+                                    "IVD - In Vitro Device.",
+                                    "RUO - Research Use Only. Not for use in diagnostic procedures."
+                                ]
+                            },
+                            "reviewItem": {
+                                "type": "string",
+                                "description": "If FDA reviewed, item under reviewed.",
+                                "enum": [
+                                    "ASR - Analyte Specific Reagent(s)",
+                                    "Assay(s)",
+                                    "IVDMIA - In Vitro Diagnostic Multivariate Index Assay(s)",
+                                    "Instrument(s)",
+                                    "Test kit(s)"
+                                ]
+                            },
+                            "otherReviewItem": {
+                                "type": "string",
+                                "description": "If FDA reviewed item is not in the item enum list, please specify."
+                            },
+                            "regulatoryStatus": {
+                                "type": "string",
+                                "description": "If FDA reviewed, FDA regulatory status from enum list.",
+                                "enum": [
+                                    "FDA cleared/approved",
+                                    "FDA exempt",
+                                    "Not submitted",
+                                    "Pending"
+                                ]
+                            },
+                            "otherRegulatoryStatus": {
+                                "type": "string",
+                                "description": "If fdaRegulatoryStatus value is not in the status enum list, please specify."
+                            },
+                            "fdaApplicationNumber": {
+                                "type": "string",
+                                "description": "If FDA reviewed, FDA application number."
+                            }
+                        },
+                        "additionalProperties": false,
+                        "if": {
+                            "properties": {
+                                "reviewed": {"const": true}
+                            }
+                        },
+                        "then": {
+                            "allOf": [
+                                {
+                                    "oneOf": [
+                                        {
+                                            "required": ["reviewItem"]
+                                        },
+                                        {
+                                            "required": ["otherReviewItem"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "oneOf": [
+                                        {
+                                            "required": ["regulatoryStatus"]
+                                        },
+                                        {
+                                            "required": ["otherRegulatoryStatus"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "required": ["reviewCategoryDesignation"]
+                                }
+                            ]
+                        },
+                        "not": {
+                            "required": [
+                                "reviewCategoryDesignation",
+                                "noReviewCategoryDesignation"
+                            ]
+                        }
+                    }
+                },
+                "nysClep": {
+                    "type": "object",
+                    "description": "NYS Clinical Laboratory Evaluation Program",
+                    "additionalProperties": false,
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "NYS CLEP status",
+                            "enum": [
+                                "Approved",
+                                "Exempt",
+                                "Grandfathered",
+                                "Pending"
+                            ]
+                        },
+                        "testApprovalNumber": {
+                            "type": "string",
+                            "description": "NYS CLEP test approval number"
+                        }
+                    }
+                },  
+                "testDevelopment": {
+                    "description": "Information about how the test is developed.",
+                    "type": "string",
+                    "enum": [
+                        "FDA-reviewed (has FDA test name)",
+                        "Manufactured (research use only; not FDA-reviewed)",
+                        "Modified FDA (has FDA-reviewed entry, but with lab modifications/field changes)",
+                        "Test developed by laboratory (no manufacturer test name)"
+                    ]
+                },
+                "howToOrder": {
+                    "description": "Description of the test ordering procedure.",
+                    "type": "string"
+                },
+                "orderURL": {
+                    "description": "The URL for ordering the test.",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "sampleRequirement": {
+                    "description": "Instructions for proper processing of the sample, including collection, sample container, volume, storage, temperature, causes for rejection, days that samples may or may not be received.",
+                    "type": "string"
+                },
+                "specimen": {
+                    "type": "object",
+                    "description": "Specimen sample allowed for the test.",
+                    "properties": {
+                        "sources": {
+                            "type": "array",
+                            "description": "Specimen sample source, from enum list",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Amniotic fluid",
+                                    "Bone marrow",
+                                    "Bronchoalveolar lavage",
+                                    "Buccal swab",
+                                    "Buffy coat",
+                                    "Cell culture",
+                                    "Cerebrospinal fluid",
+                                    "Chorionic villi",
+                                    "Cord blood",
+                                    "Fetal blood",
+                                    "Fresh tissue",
+                                    "Frozen tissue",
+                                    "Nasal aspirates",
+                                    "Nasal swab",
+                                    "Nasopharyngeal (NP) swab",
+                                    "Nasopharyngeal washes",
+                                    "Oropharyngeal swab",
+                                    "Paraffin block",
+                                    "Peripheral (whole) blood",
+                                    "Plasma",
+                                    "Product of conception (POC)",
+                                    "Saliva",
+                                    "Serum",
+                                    "Skin",
+                                    "Sputum",
+                                    "Throat swab",
+                                    "Urine",
+                                    "White blood cell prep"
+                                ]
+                            }
+                        },
+                        "otherSource": {
+                            "type": "string",
+                            "description": "Value if specimen source is not in the provider enum list"
+                        },
+                        "url": {
+                            "description": "The URL at lab's website that describes specimen requirements and/or collection protocol.",
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "zCode": {
+                    "description": "Z-Code Identifier for this test. 5-character alpha-numeric code associated with certain molecular diagnostics (MDx) tests used in addition to the CPT code, to help payers and providers clearly understand which test is being ordered, performed, and billed.",
+                    "type": "string"
+                },
+                "turnaroundTime": {
+                    "description": "The usual number of hours or days between the time a specimen is received and a result is released. Specify the time unit (e.g. 2-3 days).",
+                    "type": "string"
+                },
+                "testCodeURL": {
+                    "description": "The URL for information on codes (e.g. CPT, ICD-9, ICD-10).",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "loincCodes": {
+                    "description": "Logical Observation Identifiers Names and Codes.",
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "cptCodes": {
+                    "description": "Molecular pathology Current Procedural Terminology (CPT®) code - 'MoPath' code - from the American Medical Association (AMA) that describes the test.",
+
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "whoCanOrder": {
+                    "description": "One or more types of individuals who are able to order the test.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Genetic Counselor",
+                            "Health Care Provider",
+                            "In-State Patients",
+                            "Licensed Dentist",
+                            "Licensed Physician",
+                            "Nurse Practitioner",
+                            "Out-of-State Patients",
+                            "Physician Assistant",
+                            "Public Health Mandate",
+                            "Registered Nurse"
+                        ]
+                    }
+                },
+                "informedConsentRequired": {
+                    "type": "string",
+                    "description": "Whether the lab reqires informed consent prior to performing the test.",
+                    "enum": [
+                        "Decline to answer",
+                        "Required",
+                        "Not required",
+                        "Based on applicable state law"
+                    ]
+                },
+                "testServices": {
+                    "type": "array",
+                    "description": "Laboratory service that is offered in conjunction with the test, from enum list",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "testService": {
+                                "type": "string",
+                                "enum": [
+                                    "Data Storage and Backup",
+                                    "Result interpretation"
+                                ]
+                            },
+                            "otherService": {
+                                "type": "string",
+                                "description": "Value if test service is not in the enum list"
+                            },
+                            "orderCode": {
+                                "type": "string",
+                                "description": "Order code for test service"
+                            },
+                            "comment": {
+                                "description": "Helpful information regarding the test service, e.g., how to request the service.",
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "oneOf": [
+                            {
+                                "required": ["testService"]
+                            },
+                            {
+                                "required": ["otherService"]
+                            }
+                        ]
+                    }
+                },
+                "testingStrategy": {
+                    "description": "Description of the clinical testing strategy, not the test procedure; can include prior testing requirements",
+                    "type": "string"
+                },
+                "citationsForTestingStrategy": {
+                    "description": "Citations for the testing strategy/algorithm; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://).",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "testContactPolicies": {
+                     "description": "Laboratory policy regarding who may contact lab (e.g., patients and/or health care providers) and when during the testing process the laboratory will discuss tests with patients.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Laboratory can only accept contact from health care providers. Patients/families are encouraged to discuss testing options with their health care provider.",
+                            "Post-test email/phone consultation regarding test results and interpretation is provided to patients/families.",
+                            "Pre-test email/phone consultation regarding test results and interpretation is provided to patients/families."
+                        ]
+                    }
+                },
+                "testContactPersons": {
+                    "type": "array",
+                    "items": {
+                        "description": "Lab person name in the format: first-name last-name. The lab person should be in the lab personnel list.",
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "testPerformanceLocations": {
+                    "description": "Locations for test performance.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Entire test performed in-house",
+                            "Interpretation performed at an outside lab",
+                            "Interpretation performed both in-house and at an outside lab",
+                            "Interpretation performed in-house",
+                            "Report generated at an outside lab",
+                            "Report generated both in-house and at an outside lab",
+                            "Report generated in-house",
+                            "Specimen preparation performed at an outside lab",
+                            "Specimen preparation performed both in-house and at an outside lab",
+                            "Specimen preparation performed in-house",
+                            "Wet lab work performed at an outside lab",
+                            "Wet lab work performed both in-house and at an outside lab",
+                            "Wet lab work performed in-house"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "commentForTestPerformanceLocation": {
+                    "description": "If any part of the test is performed externally, describe here which part(s) and where part(s) are performed.",
+                    "type": "string"
+                },
+                "methods": {
+                    "type": "array",
+                    "description": "Set of method category and primary methodology used in the test; the major method categories for the test which will be inferred from the methodCategory are: (1) Molecular Genetics, and (2) Serology",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "methodCategory": {
+                                "$ref": "#/definitions/microbeTestMethodCategoryEnum",
+                                "description": "General category to which the test method belongs"
+                            },
+                            "method": {
+                                "$ref": "#/definitions/microbeTestMethodEnum",
+                                "description": "Primary methodology for the test"
+                            },
+                            "otherMethod": {
+                                "type": "string",
+                                "description": "Value if method is not in the method enum list."
+                            },
+                            "instruments": {
+                                "description": "Instrument(s) used for the method.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Name of instrument used.",
+                                            "$ref": "#/definitions/microbeTestInstrumentEnum"
+                                    },
+                                        "otherInstrument": {
+                                            "type": "string",
+                                            "description": "Value if instrument used is not in the instrument enum list."
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "oneOf": [
+                                        {
+                                            "required": ["name"]
+                                        },
+                                        {
+                                            "required": ["otherInstrument"]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "required": ["methodCategory"]
+                            },
+                            {
+                                "oneOf": [
+                                    {
+                                        "required": ["method"]
+                                    },
+                                    {
+                                        "required": ["otherMethod"]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "platforms": {
+                    "type": "array",
+                    "description": "The platform used for the test, usually a commercial product (catalog number or set of numbers) with pre-defined test targets used in the test.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "$ref": "#/definitions/microbeTestPlatformEnum",
+                                "description": "Name of commercial platform or kit with predefined test targets."
+                            },
+                            "otherPlatform": {
+                                "type": "string",
+                                "description": "Value if platform used is not in the enum list."                            }
+                        },
+                        "additionalProperties": false,
+                        "oneOf": [
+                            {
+                                "required": ["name"]
+                            },
+                            {
+                                "required": ["otherPlatform"]
+                            }
+                        ]
+                    }
+                },
+                "testProcedureOrProtocol": {
+                    "description": "Summary of the methodology, including specific steps for each method used in the assay.",
+                    "type": "string"
+                },
+                "citationsForTestProcedureOrProtocol": {
+                    "$ref": "#/definitions/citationsType",
+                    "description": "Citations supporting the test protocol; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                },
+                "testResultsConfirmation": {
+                    "description": "Information about whether results are confirmed and if so, how.",
+                    "type": "string"
+                },
+                "testComment": {
+                    "description": "Optional textual description of the test.",
+                    "type": "string"
+                },
+                "analyticalValidity": {
+                    "description": "Quantitative information about analytical sensitivity, analytical specificity, accuracy, and/or precision of this test.",
+                    "type": "string"
+                },
+                "citationsForAnalyticalValidity": {
+                    "$ref": "#/definitions/citationsType",
+                    "description": "Citations supporting the analytical validity statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                },
+                "positiveAndNegativePredictiveValuesOrPPVAndNPV": {
+                    "type": "string",
+                    "description": "Positive Predictive Value (PPV) is the probability of true disease when the result is positive. Negative Predictive Value (NPV) is the probability of no disease when the result is negative"
+                },
+                "citationsForPPVAndNPV": {
+                    "description": "Citations used to evaluate PPV/NPV of the test; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "clinicalValidity": {
+                    "description": "A measure of how consistently and accurately the test detects or predicts the intermediate or final outcomes of interest. Clinical sensitivity and specificity, description of the population(s) assessed, and the number of specimens are used to calculate clinical validity.",
+                    "type": "string"
+                },
+                "citationsForClinicalValidity": {
+                    "description": "Citations used to evaluate the clinical validity of the test; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)",
+                    "$ref": "#/definitions/citationsType"
+                },
+                "assayLimitations": {
+                    "type": "string",
+                    "description": "Test limitations that affect the value of the test for its intended use, such as the limit of detection and test restrictions."
+                },
+                "citationsForAssayLimitations": {
+                    "$ref": "#/definitions/citationsType",
+                    "description": "Citations supporting the assay limitation statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                },
+                "minimalMicrobeLoadTestCanDetect": {
+                    "type": "string",
+                    "description": "Limit of detection or the microbe load below which the test cannot reliably detect the microbe; e.g., viral loads &lt; 20 copies/ml cannot be reliably detected and will be reported as 'below the limit of detection')."
+                },
+                "citationsForMinimalMicrobeLoadTestCanDetect": {
+                    "$ref": "#/definitions/citationsType",
+                    "description": "Citations supporting the minimal microbial load s statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                },
+                "clinicalUtilities": {
+                    "type": "array",
+                    "description": "Likelihood of the test is to significantly improve patient outcomes.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "type": "string",
+                                "description": "Clinical utility category value",
+                                "enum": [
+                                    "Avoidance of invasive testing",
+                                    "Establish or confirm diagnosis",
+                                    "Guidance for management",
+                                    "Guidance for selecting a drug therapy and/or dose",
+                                    "Lifestyle planning",
+                                    "Sufficient research has not been conducted to demonstrate the utility of the test"
+                                ]
+                            },
+                            "otherCategory": {
+                                "type": "string",
+                                "description": "Value if category is not in the enum list."
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "The URL to display references to support a clinical utility choice.",
+                                "format": "uri"
+                            },
+                            "citations": {"$ref": "#/definitions/citationsType"}
+                        },
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "oneOf": [
+                                    {
+                                        "required": ["category"]
+                                    },
+                                    {
+                                        "required": ["otherCategory"]
+                                    }
+                                ]
+                            },
+                            {
+                                "anyOf": [
+                                    {
+                                        "required": ["url"]
+                                    },
+                                    {
+                                        "required": ["citations"]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "conditionsOrPhenotypes": {
+                    "type": "array",
+                    "description": "The condition or phenotype relevant to the eligibility criteria and/or study aims for the test, provided as either a database identifier or a name.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "ontologyDb": {
+                                "type": "string",
+                                "description": "Databases supporting the classification and standardized nomenclature and coding of human conditions and phenotypes with a genetic basis: OMIM - Online Mendelian Inheritance in Man®; MedGen - Medical Genetics resource (National Center for Biotechnology Information; NCBI); HPO - Human Phenotype Ontology (The Jackson Laboratory); Orphanet (Orphanet / INSERM); MeSH - Medical Subject Headings (NCBI); MONDO (EMBL - EBI); select from enum list.",
+                                "enum": [
+                                    "OMIM",
+                                    "MedGen",
+                                    "HPO",
+                                    "Orphanet",
+                                    "MeSH",
+                                    "MONDO"
+                                ]
+                            },
+                            "id": {"type": "string"},
+                            "name": {
+                                "type": "string",
+                                "description": "Name of condition or phenotype."
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "Infectious disease",
+                                    "disease",
+                                    "pharmacological response"
+                                ]
+                            },
+                            "labPreferredName": {
+                                "type": "string",
+                                "description": "The preferred name of the condition or phenotype that is referred to by the laboratory."
+                            },
+                            "synonyms": {
+                                "type": "array",
+                                "description": "The synonym of the condition or phenotype.",
+                                "items": {"type": "string"},
+                                "uniqueItems": true,
+                                "minItems": 0
+                            },
+                            "labPreferredAcronym": {
+                                "type": "string",
+                                "description": "The acronym for the condition or phenotype that is referred to by the laboratory."
+                            },
+                            "acronyms": {
+                                "type": "array",
+                                "description": "Your laboratory's preferred acronym for the condition.",
+                                "items": {"type": "string"},
+                                "uniqueItems": true,
+                                "minItems": 0
+                            },
+                            "prevalenceDescription": {
+                                "type": "string",
+                                "description": "Prevalence or the most current estimated number of cases of the disease in the population."
+                            },
+                            "prevalenceURL": {
+                                "type": "string",
+                                "description": "URL for prevalence claim.",
+                                "format": "uri"
+                            },
+                            "citationsForPrevalence": {"$ref": "#/definitions/citationsType"}
+                        },
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "oneOf": [
+                                    {
+                                        "required": [
+                                            "ontologyDb",
+                                            "id"
+                                        ]
+                                    },
+                                    {
+                                        "required": ["name"]
+                                    }
+                                ]
+                            },
+                            {
+                                "dependencies": {
+                                    "ontologyDb": ["id"],
+                                    "id": ["ontologyDb"]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": ["citationsForPrevalence"]
+                                },
+                                "then": {
+                                    "required": ["prevalenceDescription"]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": ["prevalenceURL"]
+                                },
+                                "then": {
+                                    "required": ["prevalenceDescription"]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "testTargets": {
+                    "description": "The microorganism(s) and their genes, variants, proteins, analytes, and/or extrachromosomal or nucleic acid sequences that are measured in the test.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "microbeType": {
+                                "type": "string",
+                                "description": "Type of microorganism, from the enum list.",
+                                "enum": [
+                                    "bacterium",
+                                    "fungus",
+                                    "microbe",
+                                    "protozoan",
+                                    "virus"
+                                ]
+                            },
+                            "organism": {
+                                "type": "string",
+                                "description": "Name of the microorganism."
+                            },
+                            "genes": {
+                                "type": "array",
+                                "description": "Microbial gene(s) measured in the test.",
+                                "items": {"type": "string"},
+                                "minItems": 1,
+                                "uniqueItems": true
+                            },
+                            "variants": {
+                                "type": "array",
+                                "description": "Microbial gene variant(s) measured in the test.",
+                                "items": {
+                                    "properties": {
+                                        "variant": {"type": "string"},
+                                        "genes": {
+                                            "type": "array",
+                                            "items": {"type": "string"},
+                                            "uniqueItems": true
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "genes",
+                                        "variant"
+                                    ]
+                                }
+                            },
+                            "analytes": {
+                                "type": "array",
+                                "description": "Microbial analyte(s) measured in the test.",
+                                "items": {"type": "string"},
+                                "minItems": 1,
+                                "uniqueItems": true
+                            },
+                            "chromosomalRegionOrMitochondrions": {
+                                "type": "array",
+                                "description": "Microbial chromosomal region, mitochondrion, extrachromosomal elements, and/or nucleic acid sequences measured in the test.",
+                                "items": {"type": "string"},
+                                "minItems": 1,
+                                "uniqueItems": true
+                            },
+                            "proteins": {
+                                "type": "array",
+                                "description": "Microbial protein(s) measured in the test.",
+                                "items": {"type": "string"},
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        },
+                        "required": ["microbeType", "organism"],
+                        "anyOf": [
+                            {
+                                "required": ["genes"]
+                            },
+                            {
+                                "required": ["variants"]
+                            },
+                            {
+                                "required": ["analytes"]
+                            },
+                            {
+                                "required": ["chromosomalRegionOrMitochondrions"]
+                            },
+                            {
+                                "required": ["proteins"]
+                            }
+                        ]
+                    }
+                },
+                "howLongMicrobePresentAfterTherapy": {"type": "string"},
+                "commentsAboutTestInterpretation": {"type": "string"},
+                "researchPerformedAfterClinicalTestingIsComplete": {"type": "string"},
+                "proficiencyTesting": {
+                    "type": "object",
+                    "description": "Periodic internal or external evaluation of the test to corroborate the accuracy of test results.",
+                    "properties": {
+                        "method": {
+                            "type": "string",
+                            "description": "The type of proficiency testing that is performed, from enum list. ",
+                            "enum": [
+                                "Alternative Assessment",
+                                "Formal PT program",
+                                "Inter-Laboratory",
+                                "Intra-Laboratory"
+                            ]
+                        },
+                        "otherMethod": {
+                            "type": "string",
+                            "description": "Value if method is not in the method enum list."
+                        },
+                        "methodDescription": {
+                            "type": "string",
+                            "description": "A description of the proficiency testing method used."
+                        },
+                        "citationsForMethodDescription": {
+                            "$ref": "#/definitions/citationsType",
+                            "description": "Citations to support the proficiency testing method statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                        },
+                        "provider": {
+                            "type": "string",
+                            "enum": [
+                                "American College of Physicians - Medical Laboratory Evaluation, ACP MLE",
+                                "Association for Molecular Pathology, AMP",
+                                "Belgian Official EKE Schemes, GLP Monitoring Programme",
+                                "Canadian External Quality Assessment Laboratory, CEQAL",
+                                "Centers for Disease Control and Prevention Newborn Screening Quality Assurance Program, CDC DLS",
+                                "Clinical Pathology Accreditation (UK) Ltd., CPA",
+                                "College of American Pathologists, CAP",
+                                "European Concerted Action on Thrombosis External Quality Assessment Program, ECAT EQAP",
+                                "European Molecular Genetics Quality Network, EMQN",
+                                "European Research Network for the Evaluation and Improvement of Screening Diagnosis and Treatment of Inherited Metabolic Disorders - External Quality Assessment Schemes, ERNDIM EQAS",
+                                "External Quality Assessment for Molecular Genetic Testing for Phenylketonuria, EQA-PKU",
+                                "Human Genetic Society of Australasia, HGSA",
+                                "Institute for Standardization and Documentation in the Medical Laboratory, INSTAND",
+                                "Pacific Northwest Regional Genetics Group, PacNoRGG",
+                                "Society for Inherited Metabolic Disorders, SIMD"
+                            ]
+                        },
+                        "otherProvider": {
+                            "type": "string",
+                            "description": "Value if provider is not in the provider enum list."
+                        }
+                    },
+                    "additionalProperties": false,
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "method",
+                                    "otherMethod"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "provider",
+                                    "otherProvider"
+                                ]
+                            }
+                        ]
+                    },
+                    "if": {
+                        "required": ["citationsForMethodDescription"]
+                    },
+                    "then": {
+                        "required": ["methodDescription"]
+                    }
+                },
+                "internalTestValidationMethod": {
+                    "type": "string",
+                    "description": "Explanation of how the lab validates the test."
+                },
+                "citationsForInternalTestValidationMethod": {
+                    "$ref": "#/definitions/citationsType",
+                    "description": "Citations to support internal test validation method statement; for PubMed ID use format 'PMID: 23193275'; for URL, begin with the protocol (e.g. https://)"
+                },
+                "caps": {
+                    "type": "array",
+                    "description": "Set of mjaor category, sub-category and test code to specify, if College of American Pathologists (CAP) is chosen as Provider for proficiency testing",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "majorCapCategory": {
+                                "$ref": "#/definitions/majorCapCategoryEnum",
+                                "description": "Category to specify, if College of American Pathologists (CAP) is chosen as Provider for proficiency testing"
+                            },
+                            "capCategory": {
+                                "description": "Relevant sub-category, if major CAP category is selected.",
+                                "$ref": "#/definitions/capCategoryEnum"
+                            },
+                            "capTest": {
+                                "$ref": "#/definitions/capTestEnum",
+                                "description": "Relevant test code, if major CAP category is selected."
+                            }
+                        }
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "action": {"const": "update"}
+                        }
+                    },
+                    "then": {
+                        "required": ["gtrAccession"]
+                    },
+                    "else": {
+                        "not": {
+                            "required": ["gtrAccession"]
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTargetPopulation"]
+                    },
+                    "then": {
+                        "required": ["targetPopulation"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTestingStrategy"]
+                    },
+                    "then": {
+                        "required": ["testingStrategy"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForTestProcedureOrProtocol"]
+                    },
+                    "then": {
+                        "required": ["testProcedureOrProtocol"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForAnalyticalValidity"]
+                    },
+                    "then": {
+                        "required": ["analyticalValidity"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForClinicalValidity"]
+                    },
+                    "then": {
+                        "required": ["clinicalValidity"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForAssayLimitations"]
+                    },
+                    "then": {
+                        "required": ["assayLimitations"]
+                    }
+                },
+                {
+                    "if": {
+                        "required": ["citationsForInternalTestValidationMethod"]
+                    },
+                    "then": {
+                        "required": ["internalTestValidationMethod"]
+                    }
+                }
+            ]
+        },
+        "testDeletion": {
+            "description": "Delete a previously registered human clinical test or clinical microbe test.",
+            "type": "object",
+            "required": ["gtrAccession"],
+            "properties": {
+                "gtrAccession": {
+                    "$ref": "#/definitions/gtrAccessionType",
+                    "description": "The GTR test accession number to be deleted."
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "Reason for deleting the test."
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "gtrAccessionType": {
+            "type": "string",
+            "pattern": "^GTR[0123456789]{9}$"
+        },
+        "citationsType": {
+            "type": "array",
+            "items": {"type": "string"},
+            "minItems": 0,
+            "uniqueItems": true
+        },
+        "majorCapCategoryEnum": {
+            "type": "string",
+            "enum": [
+                "ABO Subgroup Typing",
+                "Alpha-1 Antitrypsin (SERPINA1) Genotyping",
+                "Anti-HCV, Rapid Methods, Waived",
+                "Anti-Saccharomyces cerevisiae Antibody",
+                "Antibody Titer",
+                "Antichromatin Antibody",
+                "Antifilamentous Actin IgG Antibody",
+                "Antihistone Antibody",
+                "Antimitochondrial M2 Antibody",
+                "Antiparietal Cell Antibody",
+                "Antiphosphatidylserine Antibody",
+                "Antiphospholipid Antibody",
+                "Antiribosomal-P Antibody",
+                "Apolipoprotein E Genotyping",
+                "Bacterial Antigen Detection",
+                "Bacterial Detection in Platelets",
+                "Bacterial Detection in Platelets, Rapid",
+                "Bacterial Strain Typing",
+                "Bacterial Vaginosis",
+                "Bacteriology",
+                "Biochemical Genetics",
+                "Blood Culture",
+                "Blood Culture Panels for Molecular Multiplex Testing",
+                "Blood Parasite",
+                "Bordetella pertussis/parapertussis Molecular",
+                "C. difficile Detection",
+                "C. trachomatis and N. gonorrhoeae",
+                "CAP/NSH HistoQIP",
+                "CAP/NSH HistoQIP - IHC",
+                "CD117, CD20 Immunohistochemistry Tissue Microarray",
+                "Campylobacter",
+                "Candida Culture",
+                "Chlamydia trachomatis",
+                "Cord Blood and Stem Cell Processing",
+                "Cytogenetics",
+                "Cytogenomic Microarray Analysis",
+                "Cytokines",
+                "DNA Mismatch Repair",
+                "DNA Purification from FFPET",
+                "Defective DNA Mismatch Repair/HNPCC",
+                "Direct Antiglobulin Testing",
+                "ER/PgR Immunohistochemistry Tissue Microarray",
+                "Eluate Survey",
+                "Expanded Bacteriology",
+                "First Trimester Maternal Screening",
+                "Flow Cytometry",
+                "Fluorescence in Situ Hybridization (FISH)",
+                "Fluorescence in Situ Hybridization (FISH) for Paraffin-Embedded Tissue",
+                "Fungal Serology",
+                "Fungal Smear",
+                "GC, Throat and Urine Cultures",
+                "Galactomannan",
+                "Gastric HER2",
+                "Gastrointestinal Panel for Molecular Multiplex Testing",
+                "Glioma",
+                "Gram Stain",
+                "Group B Strep Detection",
+                "HER2 Immunohistochemistry",
+                "HIV Viral Load",
+                "HLA Crossmatching, Antibody Screen, and Antibody Identification (Class I)",
+                "HLA Crossmatching, Antibody Screen, and Antibody Identification (Class I/II) Combinations",
+                "HLA Crossmatching, Antibody Screen, and Antibody Identification (Class II)",
+                "HLA Disease Association, Drug Risk",
+                "HLA Molecular Typing",
+                "HLA Serologic Typing (Class I/II)",
+                "HLA-B27 Typing",
+                "Heavy Chain/Light Chain Analysis",
+                "Helicobacter pylori Antigen, Stool",
+                "Hemoglobinopathies, Molecular Methods",
+                "Hepatitis Viral Load",
+                "Herpes Simplex Virus",
+                "Human Papillomavirus",
+                "Human Papillomavirus (High Risk) for Cytology",
+                "Immunohistochemistry",
+                "Immunohistochemistry Tissue Microarray Series",
+                "Immunology ANA, ASO, CRP, HCG, IM, RF/RFX, RUB/RUBX, IL",
+                "Immunology, General",
+                "Immunology, Special; Limited",
+                "In Situ Hybridization",
+                "India Ink",
+                "Infectious Disease Respiratory Panel for Molecular Multiplex Testing",
+                "Infectious Disease Serology",
+                "Influenza A, Influenza B and RSV by NAA",
+                "Inherited Metabolic Diseases",
+                "Limited Bacteriology",
+                "Limited Mycobacteriology",
+                "Liver-Kidney Microsomal Antibody (Anti-LKM)",
+                "M. tuberculosis-Stimulated Infection Detection",
+                "Methicillin-Resistant Staphylococcus aureus Screen",
+                "Microbiology Combination",
+                "Minimal Residual Disease",
+                "Molecular Genetics",
+                "Molecular Genetics Sequencing",
+                "Molecular Hematologic Oncology",
+                "Molecular MTB Detection and Resistance",
+                "Monitoring Engraftment",
+                "Multigene Tumor Panel",
+                "Mycobacteriology",
+                "Mycology",
+                "Neoplastic Cellularity",
+                "Next-Generation Sequencing - Hematologic Malignancies",
+                "Next-Generation Sequencing - Solid Tumors",
+                "Next-Generation Sequencing Bioinformatics",
+                "Nucleic Acid Amplification, Organisms",
+                "Nucleic Acid Amplification, Respiratory",
+                "Nucleic Acid Amplification, Viruses",
+                "Nucleic Acid Testing",
+                "PNA FISH",
+                "Parasitology",
+                "Parentage/Relationship Testing",
+                "Pharmacogenetics",
+                "Platelet Serology",
+                "Pneumocystis jirovecii",
+                "Rapid Anti-HIV; Rapid Anti-HIV, Waived",
+                "Rapid Strep A Antigen Detection",
+                "Red Blood Cell Antigen Genotyping",
+                "Red Blood Cell Antigen Typing",
+                "Rett Syndrome (MECP2) Genotyping",
+                "Rheumatic Disease Special Serologies",
+                "Sarcoma Translocation",
+                "Shiga Toxin",
+                "Solid Tumors - Other",
+                "Stool Pathogen",
+                "Syphilis Serology",
+                "Throat Culture/Rapid Strep Combination",
+                "Thrombophilia Mutations",
+                "Tick-Transmitted Diseases",
+                "Ticks, Mites and Other Arthropods",
+                "Transfusion Medicine Automated",
+                "Transfusion Medicine Automated, Electronic Crossmatch",
+                "Transfusion Medicine Educational Challenges",
+                "Transfusion Medicine, Comprehensive/Limited",
+                "Transfusion Medicine, Electronic Crossmatch",
+                "Trichomonas vaginalis, Molecular",
+                "Tumor Markers",
+                "Urine Colony Count; Urine Colony Count Combination",
+                "Vaginitis Screen",
+                "Vancomycin-Resistant Enterococcus",
+                "Viral Load",
+                "Viral Markers - Series 1",
+                "Viral Markers - Series 2",
+                "Viral Markers - Series 3",
+                "Viral Markers - Seriest 4",
+                "Viral Markers - Seriest 5",
+                "Viral Markers - Seriest 6",
+                "Virology Antigen Detection (DFA)",
+                "Virology Antigen Detection (Non-DFA)",
+                "Virology Culture",
+                "Worm Identification",
+                "Yeast"
+            ]
+        },
+        "capCategoryEnum": {
+            "type": "string",
+            "enum": [
+                "10q (PTEN) deletion",
+                "ABO grouping",
+                "ABO subgroup typing",
+                "Acid-fast smear",
+                "Acylcarnitines, qualitative and quantitative",
+                "Adenovirus",
+                "Adenovirus (Not 40/41) antigen",
+                "Adenovirus 40/41",
+                "Adenovirus antigen",
+                "Adenovirus viral load",
+                "Adrenocorticotropic hormone (ACTH)",
+                "Allele detection (genotype)",
+                "Alpha-1 antitrypsin",
+                "Alpha-1 antitrypsin genotyping",
+                "Alpha-thalassemia",
+                "Amino acids, qualitative and quantitative",
+                "Anti-A titer",
+                "Anti-B titer",
+                "Anti-D titer",
+                "Anti-DNA antibody (ds)",
+                "Anti-Jo-1 (antihistidyl t-RNA synthetase)",
+                "Anti-LKM",
+                "Anti-RNP antibody",
+                "Anti-SSA antibody",
+                "Anti-SSA/SSB antibody",
+                "Anti-SSB antibody",
+                "Anti-Saccharomyces cerevisiae antibody, IgG and IgA",
+                "Anti-Scl-70 (anti-DNA topoisomerase)",
+                "Anti-Sm antibody",
+                "Anti-Sm/RNP antibody",
+                "Antibodies to tick-transmitted disease organisms",
+                "Antibody detection",
+                "Antibody identification",
+                "Anticardiolipin antibody",
+                "Anticentromere antibody",
+                "Antichromatin antibody",
+                "Antifilamentous actin (f-acting) IgG antibody",
+                "Antifungal susceptibility testing",
+                "Antigen detection (DFA)",
+                "Antigen detection (EIA)",
+                "Antiglomerular basement membrane (GBM), IgG antibody",
+                "Antihistone antibody",
+                "Antimicrobial susceptibility testing",
+                "Antimitochondrial antibody",
+                "Antimycobacterial susceptibility testing",
+                "Antineutrophil cytoplasmic antibody (ANCA, anti-MPO, anti-PR3)",
+                "Antinuclear antibody (ANA)",
+                "Antiparietal cell antibody",
+                "Antiphosphatidylserine antibody",
+                "Antiribosomal-P antibody",
+                "Antismooth muscle antibody",
+                "Antistreptolysin O (ASO)",
+                "Antithyroglobulin antibody",
+                "Antithyroid microsomal antibody",
+                "Antithyroid peroxidase antibody",
+                "Apolipoprotein E (APOE) genotyping",
+                "BCR/ABL1 p190",
+                "BCR/ABL1 p210",
+                "BK viral load",
+                "BK virus",
+                "BRAF",
+                "BRAF testing for HNPCC",
+                "BRCA1/2",
+                "Bacterial antigen detection",
+                "Bacterial identification",
+                "Bacterial vaginosis detection",
+                "Beta-2-glycoprotein I",
+                "Beta-2-microglobulin",
+                "Beta-thalassemia",
+                "Blood culture bacterial detection",
+                "Bloom syndrome",
+                "Bordetella parapertussis",
+                "Bordetella pertussis",
+                "Bordetella pertussis/parapertussis",
+                "Brain/Glioma Tissue: 1p/19q",
+                "Breast Cancer: HER2 gene amplification",
+                "C-reactive protein",
+                "C. difficile",
+                "CA 125",
+                "CA 15-3",
+                "CA 19-9",
+                "CA 27.29",
+                "CA 72-4",
+                "CD34+",
+                "CMA analysis for constitutional abnormality",
+                "CMV viral load",
+                "CYP2C19",
+                "CYP2C9",
+                "CYP2D6",
+                "CYP3A4",
+                "CYP3A5",
+                "Calcitonin",
+                "Campylobacter",
+                "Canavan",
+                "Candida sp.",
+                "Carnitine, qualitative and quantitative",
+                "Ceruloplasmin",
+                "Chlamydia trachomatis culture",
+                "Chromosome abnormality",
+                "Clostridium difficile toxin",
+                "Compatibility testing",
+                "Complement C3",
+                "Complement C4",
+                "Connexin 26",
+                "Coronavirus/Rhinovirus",
+                "Cryptococcal antigen detection",
+                "Cryptosporidium",
+                "Culture",
+                "Cystic fibrosis",
+                "Cytogenetics, validated material",
+                "Cytomegalovirus",
+                "Cytomegalovirus (CMV) - IgG, IgM and total antibodies",
+                "Cytomegalovirus antigen",
+                "DMD/Becker",
+                "DNA content and cell cycle analysis",
+                "DNA extraction and amplification from formalin-fixed, paraffin-embedded (FFPE) tissue",
+                "DNA sequence interpretation",
+                "DNA sequencing",
+                "EBV viral load",
+                "EGFR",
+                "Educational challenge",
+                "Educational challenge, ungraded",
+                "Educational paper challenge for constitutional or neoplastic abnormality",
+                "Electronic crossmatch",
+                "Entamoeba histolytica",
+                "Enterococcus",
+                "Enterotoxigenic E. coli (ETEC) LT/ST",
+                "Enterovirus",
+                "Epstein-Barr virus",
+                "Epstein-Barr virus (EBV)",
+                "Epstein-Barr virus (EBV) - VCA - IgG, IgM EBNA - IgG, IgM and total antibodies - EA - IgG",
+                "Escherichia coli 0157",
+                "FISH for constitutional abnormality",
+                "FISH for neoplastic disorder",
+                "FISH for urothelial carcinoma",
+                "Factor II",
+                "Factor V",
+                "Factor V Leiden",
+                "Familial dysautonomia",
+                "Fanconi anemia complementation group C",
+                "Fecal suspension (Giardia and/or Cryptosporidium immunoassay and mod. acid-fast stain)",
+                "Fecal suspension (wet mount)",
+                "Flow cytometry, interpretation only",
+                "Fragile X",
+                "Free beta hCG",
+                "Friedreich ataxia",
+                "GC culture",
+                "Galactomannan - Aspergillus",
+                "Gardnerella vaginalis",
+                "Gastrointestinal stromal tumor (GIST)",
+                "Gaucher",
+                "Giardia",
+                "Giemsa-stained blood smear",
+                "Glycogen storage disease type 1A",
+                "Glycosaminoglycans (mucopolysaccharides), qualitative and quantitative",
+                "Gram stain",
+                "Gram-negative organisms",
+                "Gram-negative rods",
+                "Group A Streptococcus antigen detection",
+                "Group B Streptococcus detection",
+                "HBV viral load",
+                "HCV genotyping",
+                "HCV viral load",
+                "HCV, qualitative",
+                "HER2 (ERBB2) gene amplification (bright field)",
+                "HHV6 viral load",
+                "HIV genotyping",
+                "HIV-RNA viral load",
+                "HLA-B*5701",
+                "HLA-B27 typing",
+                "Haptoglobin",
+                "Helicobacter pylori antigen detection",
+                "Helicobacter pylori, IgG antibody",
+                "Helocobacter pylori - IgG, IgA and total antibodies",
+                "Hemochromatosis",
+                "Hemoglobin S/C",
+                "Herpes simplex virus",
+                "Herpes simplex virus (HSV) - IgG antibody",
+                "Herpes simplex virus (HSV) antigen",
+                "Human herpesvirus 6",
+                "Human herpesvirus 8",
+                "Human metapneumovirus",
+                "Human papillomavirus",
+                "Human papillomavirus (HPV)",
+                "Huntington",
+                "IDH1, IDH2",
+                "IL-10",
+                "IL-2",
+                "IL-6",
+                "IL-8",
+                "IL28B 9rs12979860)",
+                "Identification of gram-negative organisms",
+                "Identification of gram-positive organisms",
+                "IgA",
+                "IgA kappa",
+                "IgA kappa/lambda ratio and ratio interpretation",
+                "IgA lambda",
+                "IgD",
+                "IgE",
+                "IgG",
+                "IgG kappa",
+                "IgG kappa/lambda ratio and ratio interpretation",
+                "IgG lambda",
+                "IgG subclass",
+                "IgM",
+                "IgM kappa",
+                "IgM kappa/lambda ratio and ratio interpretation",
+                "IgM lambda",
+                "India Ink",
+                "Infectious mononucleosis",
+                "Influenza A",
+                "Influenza A antigen",
+                "Influenza B",
+                "Influenza B antigen",
+                "Influenza virus",
+                "Interferon (IFN)-gamma",
+                "Interleukin (IL)-1 beta",
+                "Interpretation",
+                "JC virus",
+                "KIT",
+                "KOH preparation/calcofluor white",
+                "KRAS",
+                "Kappa/Lambda (IGK/IGL)",
+                "Karyotype",
+                "Legionella pneumophila antigen detection",
+                "Legionella pneumophila/Chlamydophila pneumoniae",
+                "Leukemia/lymphoma",
+                "Live organisms",
+                "Lymphocyte immunophenotyping",
+                "Lymphoid malignancy genotyping: IGH",
+                "Lymphoid malignancy genotyping: IGH/BCL2 major",
+                "Lymphoid malignancy genotyping: IGH/BCL2 minor",
+                "Lymphoid malignancy genotyping: IGH/CCND1",
+                "Lymphoid malignancy genotyping: IGK",
+                "Lymphoid malignancy genotyping: TRB",
+                "Lymphoid malignancy genotyping: TRG",
+                "Lymphoma Tissue: BCL2",
+                "Lymphoma Tissue: BCL6 (3q27) gene rearrangement",
+                "Lymphoma Tissue: MALT1 (18q21) gene rearrangement",
+                "M. tuberculosis",
+                "MCAD",
+                "MECP2 genotyping",
+                "MGMT",
+                "MRSA/MSSA detection",
+                "Metastatic colorectal carcinoma",
+                "Methicillin-resistant Staphylococcus aureus",
+                "Methylene tetrahydrofolate reductase (MTHFR) 677C>T and 1298A>C",
+                "Microsatellite instability testing (DNA amplification)",
+                "Mitochondrial DNA deletion syndromes",
+                "Mitochondrial cytopathies",
+                "Mold and yeast identification",
+                "Molecular HLA-A, -B, and -C typing (Class I)",
+                "Molecular HLA-DR, -DQ, and -DP typing (Class II)",
+                "Molecular typing (bacterial isolates)",
+                "Mucolipidosis IV",
+                "Multiple endocrine neoplasia type 2 (MEN2)",
+                "Mumps - IgG",
+                "Mycobacterial culture",
+                "Mycobacterial identification",
+                "Mycobacterium tuberculosis",
+                "Mycobacterium tuberculosis detection",
+                "Mycoplasma pneumoniae",
+                "Mycoplasma pneumoniae - IgG, IgM and total antibodies",
+                "Myeloid malignancy genotyping: CBFB/MYH11",
+                "Myeloid malignancy genotyping: FLT3 ITD",
+                "Myeloid malignancy genotyping: FLT3 TKD",
+                "Myeloid malignancy genotyping: JAK2 c.1849G>T (p.V617F)",
+                "Myeloid malignancy genotyping: NPM1",
+                "Myeloid malignancy genotyping: PML/RARA",
+                "Myeloid malignancy genotyping: RUNX1/RUNX1T1",
+                "Myotonic dystrophy",
+                "Niemann-Pick disease type A",
+                "Non-small cell lung adenocarcinoma",
+                "Norovirus",
+                "Norovirus GI/GII",
+                "Nucleic acid amplification (NAA)",
+                "Online assessment of percent neoplastic cellularity",
+                "Organic acids, qualitative and quantitative",
+                "PAPP-A",
+                "PCP stain",
+                "PDGFRA",
+                "PML/RARA",
+                "Parainfluenza antigen",
+                "Parainfluenza virus",
+                "Parvovirus B19",
+                "Plasminogen activator inhibitor (PAI)-1",
+                "Prader-Willi/Angelman syndrome",
+                "Prealbumin (transthyretin)",
+                "Preserved slide (for permanent stain)",
+                "Prothrombin",
+                "Rapid group A Streptococcus antigen detection",
+                "Red blood cell antigen typing",
+                "Red cell antigen genotype with predictive phenotype",
+                "Respiratory syncytial virus (RSV)",
+                "Respiratory syncytial virus (RSV) antigen",
+                "Rh typing",
+                "RhD",
+                "Rheumatoid factor",
+                "Rhinovirus/Enterovirus",
+                "Rifampin resistance",
+                "Rotavirus",
+                "Rotavirus A",
+                "Rotavirus antigen",
+                "Rubella (IgG)",
+                "Rubeola virus (English measles) - IgG antibody",
+                "SLCO1B1",
+                "Salmonella",
+                "Sarcoma translocation (RT-PCR)",
+                "Serological detection of specific fungal antibodies",
+                "Shiga toxin",
+                "Shiga-like toxin producing E. coli (STEC) stx1/stx2",
+                "Shigella",
+                "Solid Tumor: DDIT3 (CHOP) (12q13) gene rearrangement",
+                "Solid Tumor: EWSR1 (22q12) gene rearrangement",
+                "Solid Tumor: FOXO1",
+                "Solid Tumor: MDM2",
+                "Spinal muscular atrophy",
+                "Spinocerebellar ataxia",
+                "Staphylococcus",
+                "Streptococcus pneumoniae antigen detection",
+                "Syphilis",
+                "Tay-Sachs",
+                "Thin/thick blood film sets",
+                "Throat culture",
+                "Thyroglobulin",
+                "Tick, mite and arthropod identification",
+                "Total hCG",
+                "Total kappa/lambda ratio",
+                "Toxoplasma gondii - IgG, IgM and total antibodies",
+                "Transferrin",
+                "Trichomonas vaginalis",
+                "Tumor necrosis factor (TNF)-alpha",
+                "UGT1A1",
+                "Urine culture",
+                "VKORC1",
+                "Vancomycin-resistant Enterococcus",
+                "Vancomycin-resistant Enterococcus (VRE) detection",
+                "Varicella-zoster antigen",
+                "Varicella-zoster virus",
+                "Varicella-zoster virus - IgG and total antibodies",
+                "Vascular endothelial growth factor (VEGF)",
+                "Viral isolation/identification",
+                "Worm identification",
+                "Yeast",
+                "Yeast identification",
+                "hCG, serum"
+            ]
+        },
+        "capTestEnum": {
+            "type": "string",
+            "enum": [
+                "AAT",
+                "ABOSG",
+                "ABT",
+                "ABT1",
+                "ABT2",
+                "ABT3",
+                "ACA",
+                "ACL",
+                "AHT",
+                "ANA",
+                "APC",
+                "APOE",
+                "APS",
+                "ARP",
+                "ASC",
+                "ASO",
+                "B27",
+                "BCS",
+                "BGL",
+                "BGL1",
+                "BOR",
+                "BP",
+                "BRAF",
+                "BSTE",
+                "BSTN",
+                "BSTS",
+                "BV",
+                "CAMP",
+                "CDF2",
+                "CDF5",
+                "CRP",
+                "CTKN",
+                "CY",
+                "CYBK",
+                "CYCGH",
+                "CYF",
+                "CYH",
+                "CYI",
+                "CYJ",
+                "CYK",
+                "CYL",
+                "CYM",
+                "D",
+                "D5",
+                "D6",
+                "D8",
+                "D9",
+                "DEX",
+                "DL",
+                "DML",
+                "E",
+                "E1",
+                "EGFR",
+                "EXM",
+                "EXM2",
+                "F",
+                "F1",
+                "F3",
+                "FCN",
+                "FGAL",
+                "FL",
+                "FL1",
+                "FL2",
+                "FL3",
+                "FL4",
+                "FP1B",
+                "FP1T",
+                "FSER",
+                "FSM",
+                "G",
+                "GIP",
+                "GLI",
+                "GNBC",
+                "GPBC",
+                "HBVL",
+                "HBVL5",
+                "HC1",
+                "HC2",
+                "HC3",
+                "HC4",
+                "HC6",
+                "HC6X",
+                "HC7",
+                "HCA",
+                "HCG",
+                "HCV2",
+                "HGM",
+                "HIV",
+                "HIVG",
+                "HPS",
+                "HPV",
+                "HV2",
+                "ID1",
+                "ID1T",
+                "ID2",
+                "ID3",
+                "IDN",
+                "IDO",
+                "IDR",
+                "IG/IGX",
+                "IL",
+                "IM",
+                "IMD1",
+                "IMD2",
+                "IMD3",
+                "IND",
+                "ISH",
+                "ISH2",
+                "J",
+                "J1",
+                "JAT",
+                "JATE1",
+                "JE1",
+                "KIT",
+                "KRAS",
+                "LBAS",
+                "LKM",
+                "MC1",
+                "MC2",
+                "MC3",
+                "MC4",
+                "MC5",
+                "MGL1",
+                "MGL2",
+                "MGL3",
+                "MGL4",
+                "MGL5",
+                "MHO, MHO1",
+                "MHO2, MHO3",
+                "MHO5",
+                "ML",
+                "MRD",
+                "MRD1",
+                "MRD2",
+                "MRS",
+                "MRS5",
+                "MSI",
+                "MTBR",
+                "MTP",
+                "NEO",
+                "P",
+                "P3",
+                "P4",
+                "P5",
+                "PCP1",
+                "PCP2",
+                "PCP3",
+                "PCP4",
+                "PGx",
+                "PGx1",
+                "PGx2",
+                "PNA1",
+                "PNA2",
+                "PNA3",
+                "PNA4",
+                "QF",
+                "RAG",
+                "RDS",
+                "RETT",
+                "RF/RFX",
+                "RUB/RUBX",
+                "S2",
+                "S4",
+                "S5",
+                "SARC",
+                "SBAS",
+                "SEC",
+                "SEC1",
+                "SP",
+                "SP1",
+                "SPN",
+                "ST",
+                "TM",
+                "TMO",
+                "TMX",
+                "TPM",
+                "TTD",
+                "TVAG",
+                "VLS",
+                "VLS2",
+                "VR1",
+                "VR2",
+                "VR3",
+                "VR3M",
+                "VR4",
+                "VRE",
+                "VS",
+                "VS1",
+                "WID"
+            ]
+        },
+        "modeOfInheritanceEnum": {
+            "type": "string",
+            "enum": [
+                "Autosomal dominant inheritance",
+                "Autosomal dominant inheritance with maternal imprinting",
+                "Autosomal dominant inheritance with paternal imprinting",
+                "Autosomal recessive inheritance",
+                "Autosomal unknown",
+                "Codominant",
+                "Genetic anticipation",
+                "Mitochondrial inheritance",
+                "Multifactorial inheritance",
+                "Oligogenic inheritance",
+                "Sex-limited autosomal dominant",
+                "Somatic mutation",
+                "Sporadic",
+                "Unknown mechanism",
+                "X-linked dominant inheritance",
+                "X-linked inheritance",
+                "X-linked recessive inheritance",
+                "Y-linked inheritance"
+            ]
+        },
+        "clinicalSignificanceEnum": {
+            "type": "string",
+            "enum": [
+                "Affects",
+                "Benign",
+                "Likely benign",
+                "Likely pathogenic",
+                "Pathogenic",
+                "Uncertain significance",
+                "association",
+                "association not found",
+                "confers sensitivity",
+                "conflicting data from submitters",
+                "drug response",
+                "not provided",
+                "other",
+                "protective",
+                "risk factor"
+            ]
+        },
+        "humanTestMethodCategoryEnum": {
+            "type": "string",
+            "enum": [
+                "Analyte",
+                "Chromosome breakage studies",
+                "Deletion/duplication analysis",
+                "Detection of homozygosity",
+                "Enzyme assay",
+                "FISH-interphase",
+                "FISH-metaphase",
+                "Fluorescence in situ hybridization (FISH)",
+                "Immunohistochemistry",
+                "Karyotyping",
+                "Linkage analysis",
+                "Methylation analysis",
+                "Microsatellite instability testing (MSI)",
+                "Multicolor FISH (M-FISH)/Spectral Karyotyping™ (SKY™)",
+                "Mutation scanning of select exons",
+                "Mutation scanning of the entire coding region",
+                "Protein analysis",
+                "Protein expression",
+                "RNA analysis",
+                "Sequence analysis of select exons",
+                "Sequence analysis of the entire coding region",
+                "Sister chromatid exchange",
+                "Targeted variant analysis",
+                "Uniparental disomy study (UPD)"
+            ]
+        },
+        "humanTestMethodEnum": {
+            "type": "string",
+            "enum": [
+                "Allele-specific primer extension (ASPE)",
+                "Alternative splicing detection",
+                "Bi-directional Sanger Sequence Analysis",
+                "C-banding",
+                "Chemiluminescent Immunoassay (CIA)",
+                "Chromatin Immunoprecipitation on ChIP",
+                "Comparative Genomic Hybridization",
+                "DamID",
+                "Digital / Virtual karyotyping",
+                "Digital microfluidic microspheres",
+                "Enzymatic levels",
+                "Enzyme activity",
+                "Enzyme-Linked Immunosorbent Assays (ELISA)",
+                "Flow cytometry",
+                "Fluorescence in situ hybridization (FISH)",
+                "Fluorometry",
+                "Fusion genes microarrays",
+                "G-banding",
+                "Gas chromatography\u2013mass spectrometry (GC-MS)",
+                "Gene expression profiling",
+                "GeneID",
+                "Gold nanoparticle probe technology",
+                "High-performance liquid chromatography (HPLC)",
+                "Liquid chromatography-tandem mass spectrometry (LC-MS/MS)",
+                "Liquid chromatography\u2013mass spectrometry (LC-MS)",
+                "Metabolite levels",
+                "Methylation-specific PCR",
+                "Microarray",
+                "Multiplex Ligation-dependent Probe Amplification (MLPA)",
+                "Next-Generation (NGS)/Massively parallel sequencing (MPS)",
+                "Oligonucleotide Ligation Assay (OLA)",
+                "Oligonucleotide hybridization-based DNA sequencing",
+                "PCR",
+                "PCR with allele specific hybridization",
+                "PCR-RFLP with Southern hybridization",
+                "Protein truncation test",
+                "Pyrosequencing",
+                "Q-banding",
+                "Quantitative PCR (qPCR)",
+                "R-banding",
+                "RFLP",
+                "RT-LAMP",
+                "RT-PCR",
+                "RT-PCR with gel analysis",
+                "RT-qPCR",
+                "SNP Detection",
+                "Silver staining",
+                "Spectral karyotyping (SKY)",
+                "T-banding",
+                "Tandem mass spectrometry (MS/MS)",
+                "Tetra-nucleotide repeat by PCR or Southern Blot",
+                "Tiling Arrays",
+                "Trinucleotide repeat by PCR or Southern Blot",
+                "Uni-directional Sanger sequencing"
+            ]
+        },
+        "humanTestInstrumentEnum": {
+            "type": "string",
+            "enum": [
+                "Affymetrix GeneChip Scanner 3000 7G Whole-Genome Association System",
+                "Affymetrix GeneTitan® MC",
+                "Affymetrix HotStart-IT Probe qPCR Master Mix with UDG (2X)",
+                "Agilent 2100 Bioanalyzer",
+                "Agilent SureSelect",
+                "Applied Biosystems 3730 capillary sequencing instrument",
+                "Applied Biosystems 7900HT Sequence Detection System",
+                "Applied Biosystems SOLiD v4 System Sequencer",
+                "BeadXpress® Reader",
+                "BioRad CFX384",
+                "BioRad CFX96",
+                "Covaris S2 Sonicator",
+                "GenMark Diagnostics eSensor XT-8 system",
+                "Illumina Genome AnalyzerIIx and Genome AnalyzerIIe",
+                "Illumina HiScan™SQ system",
+                "Illumina HiSeq™2000 system",
+                "PerkinElmer Victor3 1420 Multilabel Plate Reader",
+                "Qiagen AutoPure LS",
+                "Qiagen QIAcube",
+                "Roche LightCycler 480",
+                "Tecan Genesis Robotic Workstation 150"
+            ]
+        },
+        "humanTestPlatformEnum": {
+            "type": "string",
+            "enum": [
+                "Affymetrix CytoScan HD Array",
+                "Affymetrix Gene Profiling Array cGMP U133 P2",
+                "Affymetrix GeneChip Human Genome U133 Plus 2.0 Array",
+                "Affymetrix GeneChip Human Mitochondrial Resequencing Array 2.0",
+                "Affymetrix Genome-Wide Human SNP Array 6.0",
+                "Affymetrix QuantiGene 2.0 Assay",
+                "Agilent Human CpG Island Microarray Kit, 1x244K",
+                "Agilent Human ENCODE ChIP-on-chip Microarray",
+                "Agilent Human miRNA Microarray Kit Release 16.0, 8x60K",
+                "Agilent SurePrint G3 Human CGH Microarray Kit, 2x400K",
+                "Amersham CodeLink UniSet Human I Bioarray",
+                "Illumina Infinium HD HumanCytoSNP-12",
+                "Life Technologies TaqMan OpenArray MicroRNA Panels",
+                "NimbleGen CGH 3-plex ISCA Plus Cytogenetic Array",
+                "None/not applicable",
+                "Oxford Gene Technology CytoSure DMD (4x44k)",
+                "Oxford Gene Technology CytoSure ISCA UPD (4x180k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (4x180k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (4x44k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (8x60k)",
+                "Oxford Gene Technology CytoSure Syndrome Plus v2 (2x105k)"
+            ]
+        },
+                            "humanTestConditionsOrPhenotypes": {
+                                "description": "The condition or phenotype relevant to the eligibility criteria and/or study aims for the test, provided as either a database identifier or a name.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ontologyDb": {
+                                            "description": "Databases supporting the classification and standardized nomenclature and coding of human conditions and phenotypes with a genetic basis: OMIM - Online Mendelian Inheritance in Man®; MedGen - Medical Genetics resource (National Center for Biotechnology Information; NCBI); HPO - Human Phenotype Ontology (The Jackson Laboratory); Orphanet (Orphanet / INSERM); MeSH - Medical Subject Headings (NCBI); MONDO (EMBL - EBI); select from enum list.",
+                                            "type": "string",
+                                            "enum": [
+                                                "OMIM",
+                                                "MedGen",
+                                                "HPO",
+                                                "Orphanet",
+                                                "MeSH",
+                                                "MONDO"
+                                            ]
+                                        },
+                                        "id": {"type": "string"},
+                                        "name": {
+                                            "description": "Name of condition or phenotype",
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "blood group",
+                                                "disease",
+                                                "named protein variant",
+                                                "pharmacological response"
+                                            ]
+                                        },
+                                        "primary": {
+                                            "description": "The flag of whether the name of the condition or phenotype is primary in the test. Each test can have only one primary condition or phenotype.",
+                                            "type": "boolean"
+                                        },
+                                        "labPreferredName": {
+                                            "description": "The preferred name of the condition or phenotype that is referred to by the laboratory.",
+                                            "type": "string"
+                                        },
+                                        "synonyms": {
+                                            "description": "The synonym of the condition or phenotype.",
+                                            "type": "array",
+                                            "items": {"type": "string"},
+                                            "uniqueItems": true,
+                                            "minItems": 0
+                                        },
+                                        "labPreferredAcronym": {
+                                            "description": "The acronym for the condition or phenotype that is referred to by the laboratory.",
+                                            "type": "string"
+                                        },
+                                        "acronyms": {
+                                            "description": "Your laboratory's preferred acronym for the condition.",
+                                            "type": "array",
+                                            "items": {"type": "string"},
+                                            "uniqueItems": true,
+                                            "minItems": 0
+                                        },
+                                        "modeOfInheritance": {
+                                            "description": "Value for mode of inheritance for the condition from enum list.",
+                                            "$ref": "#/definitions/modeOfInheritanceEnum"
+                                        },
+                                        "otherModeOfInheritance": {
+                                            "type": "string",
+                                            "description": "Value if mode of inheritance is not in the enum list."
+                                        },
+                                        "diseaseMechanism": {
+                                            "description": "Disease mechanism for the relationship of condition to test target.",
+                                            "type": "string",
+                                            "enum": [
+                                                "gain of function",
+                                                "loss of function"
+                                            ]
+                                        },
+                                        "otherDiseaseMechanism": {
+                                            "type": "string",
+                                            "description": "Value if disease mechanism is not in the enum list."
+                                        },
+                                        "prevalenceDescription": {
+                                            "description": "Prevalence or the most current estimated number of cases of the disease in the population.",
+                                            "type": "string"
+                                        },
+                                        "prevalenceURL": {
+                                            "description": "URL for prevalence claim.",
+                                            "type": "string",
+                                            "format": "uri"
+                                        },
+                                        "citationsForPrevalence": {
+                                            "description": "Citations to support the prevalence statement. Provide PubMed ID when available (example 'PMID: 23193275').",
+                                            "$ref": "#/definitions/citationsType"
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "allOf": [
+                                        {
+                                            "oneOf": [
+                                                {
+                                                    "required": [
+                                                        "ontologyDb",
+                                                        "id"
+                                                    ]
+                                                },
+                                                {
+                                                    "required": ["name"]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "dependencies": {
+                                                "ontologyDb": ["id"],
+                                                "id": ["ontologyDb"]
+                                            }
+                                        },
+                                        {
+                                            "not": {
+                                                "anyOf": [
+                                                    {
+                                                        "required": [
+                                                            "modeOfInheritance",
+                                                            "otherModeOfInheritance"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "diseaseMechanism",
+                                                            "otherDiseaseMechanism"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "required": ["citationsForPrevalence"]
+                                            },
+                                            "then": {
+                                                "required": ["prevalenceDescription"]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "required": ["prevalenceURL"]
+                                            },
+                                            "then": {
+                                                "required": ["prevalenceDescription"]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+        "microbeTestMethodCategoryEnum": {
+            "type": "string",
+            "enum": [
+                "Antibody assay",
+                "Antigen assay",
+                "Combination antibody and antigen assay",
+                "Mutation scanning of select exons",
+                "Mutation scanning of the entire coding region",
+                "RNA analysis",
+                "Sequence analysis of select exons",
+                "Sequence analysis of the entire coding region",
+                "Targeted variant analysis"
+            ]
+        },
+        "microbeTestMethodEnum": {
+            "type": "string",
+            "enum": [
+                "Allele-specific primer extension (ASPE)",
+                "Alternative splicing detection",
+                "Antibody detection",
+                "Antigen detection",
+                "Bi-directional Sanger Sequence Analysis",
+                "Chemiluminescent Immunoassay (CIA)",
+                "Combination antibody and antigen detection",
+                "Comparative Genomic Hybridization",
+                "Digital microfluidic microspheres",
+                "Enzymatic levels",
+                "Enzyme activity",
+                "Enzyme-Linked Immunosorbent Assays (ELISA)",
+                "Flow cytometry",
+                "Fluorescence in situ hybridization (FISH)",
+                "Fluorometry",
+                "Gas chromatography\u2013mass spectrometry (GC-MS)",
+                "GeneID",
+                "Gold nanoparticle probe technology",
+                "High-performance liquid chromatography (HPLC)",
+                "Liquid chromatography-tandem mass spectrometry (LC-MS/MS)",
+                "Liquid chromatography\u2013mass spectrometry (LC-MS)",
+                "Metabolite levels",
+                "Methylation-specific PCR",
+                "Microarray",
+                "Multiplex Ligation-dependent Probe Amplification (MLPA)",
+                "Multiplex PCR",
+                "Multiplex real-time PCR",
+                "Next-Generation (NGS)/Massively parallel sequencing (MPS)",
+                "Nucleic acid amplification test (NAAT)",
+                "Oligonucleotide Ligation Assay (OLA)",
+                "Oligonucleotide hybridization-based DNA sequencing",
+                "PCR",
+                "PCR with allele specific hybridization",
+                "PCR-RFLP with Southern hybridization",
+                "Pyrosequencing",
+                "Quantitative PCR (qPCR)",
+                "RFLP",
+                "RT-LAMP",
+                "RT-PCR",
+                "RT-PCR with gel analysis",
+                "RT-qPCR",
+                "SNP Detection",
+                "Tandem mass spectrometry (MS/MS)",
+                "Tiling Arrays",
+                "Uni-directional Sanger sequencing",
+                "Viral load"
+            ]
+        },
+        "microbeTestInstrumentEnum": {
+            "type": "string",
+            "enum": [
+                "Abbott ID NOW™",
+                "Affymetrix GeneChip Scanner 3000 7G Whole-Genome Association System",
+                "Affymetrix GeneTitan® MC",
+                "Affymetrix HotStart-IT Probe qPCR Master Mix with UDG (2X)",
+                "Agilent 2100 Bioanalyzer",
+                "Agilent SureSelect",
+                "Applied Biosystems 3730 capillary sequencing instrument",
+                "Applied Biosystems 7900HT Sequence Detection System",
+                "Applied Biosystems SOLiD v4 System Sequencer",
+                "BeadXpress® Reader",
+                "BioFireDx FilmArray",
+                "BioRad CFX384",
+                "BioRad CFX96",
+                "Cobas® 6800 / 8800 System",
+                "Covaris S2 Sonicator",
+                "GenMark Diagnostics eSensor XT-8 system",
+                "Illumina Genome AnalyzerIIx and Genome AnalyzerIIe",
+                "Illumina HiScan™SQ system",
+                "Illumina HiSeq™2000 system",
+                "PerkinElmer Victor3 1420 Multilabel Plate Reader",
+                "Qiagen AutoPure LS",
+                "Qiagen QIAcube",
+                "Roche LightCycler 480",
+                "Tecan Genesis Robotic Workstation 150"
+            ]
+        },
+        "microbeTestPlatformEnum": {
+            "type": "string",
+            "enum": [
+                "Abbott ID NOW™ COVID-19",
+                "Affymetrix CytoScan HD Array",
+                "Affymetrix Gene Profiling Array cGMP U133 P2",
+                "Affymetrix GeneChip Human Genome U133 Plus 2.0 Array",
+                "Affymetrix GeneChip Human Mitochondrial Resequencing Array 2.0",
+                "Affymetrix Genome-Wide Human SNP Array 6.0",
+                "Affymetrix QuantiGene 2.0 Assay",
+                "Agilent Human CpG Island Microarray Kit, 1x244K",
+                "Agilent Human ENCODE ChIP-on-chip Microarray",
+                "Agilent Human miRNA Microarray Kit Release 16.0, 8x60K",
+                "Agilent SurePrint G3 Human CGH Microarray Kit, 2x400K",
+                "Amersham CodeLink UniSet Human I Bioarray",
+                "BioFireDx FilmArray Pneumonia Panel plus",
+                "Cobas® SARS-CoV-2 Test",
+                "Illumina Infinium HD HumanCytoSNP-12",
+                "Life Technologies TaqMan OpenArray MicroRNA Panels",
+                "LightMix® Modular Assays",
+                "NimbleGen CGH 3-plex ISCA Plus Cytogenetic Array",
+                "None/not applicable",
+                "Oxford Gene Technology CytoSure DMD (4x44k)",
+                "Oxford Gene Technology CytoSure ISCA UPD (4x180k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (4x180k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (4x44k)",
+                "Oxford Gene Technology CytoSure ISCA v2 (8x60k)",
+                "Oxford Gene Technology CytoSure Syndrome Plus v2 (2x105k)",
+                "RIDA®GENE Bacterial Stool Panel",
+                "RIDA®GENE Viral Stool Panel III",
+                "ZEUS Borrelia Modified Two-Tiered Testing™ (MTTT) for Lyme Disease"
+            ]
+        }
+    }
+}

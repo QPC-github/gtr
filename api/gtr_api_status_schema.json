@@ -1,0 +1,135 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://submit.ncbi.nlm.nih.gov/gtr/v0.0.1/status.schema.json",
+    "title": "GTR test submission status",
+    "description": "GTR API submission status schema",
+    "type": "object",
+    "properties": {
+        "submissionID": {
+            "description": "The submission identifier for the request.",
+            "type": "string"
+        },
+        "submissionDate": {
+            "description": "The date this submission was uploaded to NCBI.",
+            "type": "string"
+        },
+        "processingStatus": {
+            "type": "string",
+            "enum": [
+                "In processing",
+                "Success",
+                "Error"
+            ]
+        },
+        "gtrAccession": {
+            "description": "The test accession assigned by NCBI.",
+            "type": "string"
+        },
+        "releaseStatus": {
+            "description": "Indicates whether the record is released publicly in GTR and is only reported after release.",
+            "type": "string"
+        },
+        "releaseDate": {
+            "description": "The date the record was released publicly in GTR; it is only reported after release.",
+            "type": "string"
+        },
+        "errors": {
+            "description": "A detailed description of each error when 'processingStatus' is 'Error'",
+            "type": "array",
+            "items": {
+                "properties": {
+                    "input": {
+                        "description": "The field names and values that are erroneous",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "description": "The json path of the item with the error",
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "description": "The submitted value",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                                "field",
+                                "value"
+                            ]
+                        }
+                    },
+                    "userMessage": {
+                        "description": "The error message related to input",
+                        "type": "array",
+                        "items": {
+                            "description": "User friendly error message",
+                            "type": "string"
+                        },
+                        "minItems": 1
+                    }
+                },
+                "required": [
+                    "input",
+                    "userMessage"
+                ]
+            }
+        },
+        "warnings": {
+            "description": "Detailed warning messages if any",
+            "type": "array",
+            "items": {
+                "properties": {
+                    "input": {
+                        "description": "The field names and values that are related to the warning",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "description": "The json path of the item with the warning",
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "description": "The submitted value",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                                "field",
+                                "value"
+                            ]
+                        }
+                    },
+                    "userMessage": {
+                        "description": "The warning message related to input",
+                        "type": "array",
+                        "items": {
+                            "description": "User friendly warning message",
+                            "type": "string"
+                        },
+                        "minItems": 1
+                    }
+                },
+                "required": [
+                    "input",
+                    "userMessage"
+                ]
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "submissionID",
+        "submissionDate",
+        "processingStatus"
+    ],
+    "if": {
+        "properties": {"processingStatus": {"const": "Success"} }
+    },
+    "then": {
+        "required": ["gtrAccession"]
+    }
+}
