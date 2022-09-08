@@ -1,0 +1,167 @@
+{
+    "microbeTest": {
+        "action": "add",
+        "labTestName": "COVID-19 Whole Genome Sequencing (WGS)",
+        "testOrderCode": "COVID-19 Whole Genome Sequencing Assay",
+        "labTestShortName": "COVID-19 WGS",
+        "manufactureTestName": "Illumina COVIDSeq",
+        "testURL": "https://www.lab_domain_name.com/coronavirus-information",
+        "searchTerms": [
+                    "COVID Sequencing",
+                    "COVID-19", 
+                    "COVIDSeq", 
+                    "COVID-19 WGS"
+        ],
+        "testPurposes":  [
+                    "Microbe identification",
+                    "Screening"
+                ],
+        "targetPopulation": "Patients that are positive for SARS-CoV-2 who are seeking variant information.",
+        "citationsForTargetPopulation": [
+                    "33596239", 
+                    "32605661"
+                ],
+        "fdaReviews": [
+            {
+                "reviewed": true,
+                "reviewCategoryDesignation": "IUO - Investigational Use Only. The performance characteristics of this product have not been established.",
+                "reviewItem": "Assay(s)", 
+                "regulatoryStatus": "FDA cleared/approved",
+                "fdaApplicationNumber": "123890"
+            }
+        ],
+        "nysClep": {
+            "status": "Approved",
+            "testApprovalNumber": "62500"
+        },
+        "testDevelopment": "Test developed by laboratory (no manufacturer test name)",
+        "howToOrder": "If you would like to begin sending samples to the lab for COVID testing, please contact covid@lab_domain_name.com.",
+        "orderURL": "https://www.lab_domain_name.com/coronavirus-information/provider-information/requesting-a-test-order",
+        "sampleRequirement": "Please visit https://www.lab_domain_name.com/COVID-19/sample for comprehensive instructions for specimen collection and transport.",
+        "specimen": {
+            "sources": [
+                "Nasal swab",
+                "Nasopharyngeal (NP) swab",
+                "Oropharyngeal swab"
+            ],
+            "otherSource": "Purified RNA",
+            "url": "https://www.lab_domain_name.com/coronavirus-information/provider-information/submitting-samples"
+        },
+        "zCode": "Z11.52",
+        "turnaroundTime": "24 hours",
+        "testCodeURL": "https://www.lab_domain_name.com/test-codes",
+        "loincCodes": ["96741-4"],
+        "cptCodes": ["81350"],
+        "whoCanOrder": [
+                "Health Care Provider",
+                "Licensed Physician",
+                "Nurse Practitioner",
+                "Physician Assistant",
+                "Registered Nurse"
+        ],
+        "informedConsentRequired": "Required",
+        "testServices": [
+            {
+                "testService": "Result interpretation",
+                "orderCode": "8893",
+                "comment": "Please indicate in the form that you are interested in this service."
+            },
+            {
+                "otherService": "Follow up in 2 months with antibody test",
+                "orderCode": "8845",
+                "comment": "This service is optional."
+            }
+        ],
+        "testingStrategy": "Reflex test for Sars-CoV-2 positive specimens.",
+        "citationsForTestingStrategy": [
+                "33658050"
+        ],
+        "testContactPolicies": [
+                "Laboratory can only accept contact from health care providers. Patients/families are encouraged to discuss testing options with their health care provider."
+        ],
+        "testContactPersons": ["Marilu Hoeppner"],
+        "testPerformanceLocations": [
+                "Entire test performed in-house"
+        ],
+        "commentForTestPerformanceLocation": "At facility on General Atomics Court.",
+        "methods": [
+            {
+                "methodCategory": "Sequence analysis of the entire coding region",
+                "method": "Next-Generation (NGS)/Massively parallel sequencing (MPS)",
+                "instruments": [
+                    {
+                        "otherInstrument": "Illumina NextSeq 500"
+                    }
+                ]
+            },
+            {
+                "methodCategory": "Targeted variant analysis",
+                "method": "Multiplex real-time PCR",
+                "instruments": [
+                    {
+                        "otherInstrument": "QuantStudio™ 5 Real-Time PCR System"
+                    }
+                ]
+            }
+        ],
+        "platforms": [
+            {
+                "otherPlatform": "Illumina COVIDSeq"
+            },
+            {
+                "otherPlatform": "TaqMan Fast Virus 1-Step Master Mix (Applied Biosystems)"
+            }
+        ],
+        "testProcedureOrProtocol": "The procedure involves viral RNA extraction from the sample, reverse transcription, PCR, library preparation, NGS sequencing, analysis, and report generation.  Real-time multiplex PCR aids in identification of viral variants.",
+        "citationsForTestProcedureOrProtocol": ["https://www.illumina.com/content/dam/illumina/gcs/assembled-assets/marketing-literature/illumina-covidseq-tech-note-m-gl-00408/illumina-covidseq-tech-note-m-gl-00408.pdf"],
+        "testResultsConfirmation": "Dual methodologies for this test aid in confirmation of test results",
+        "testComment": "This test is highly reproducible with low variability over different specimen sources.",
+        "analyticalValidity": "95% Sensitivity, 98% Specificity",
+        "citationsForAnalyticalValidity": ["35337015"],
+        "positiveAndNegativePredictiveValuesOrPPVAndNPV": "PPV 97.5%, NPV 98.3%",
+        "citationsForPPVAndNPV": ["34940002"],
+        "clinicalValidity": "",
+        "citationsForClinicalValidity": [],
+        "assayLimitations": "In samples with viral loads near the limit of detection for the assay, there is low coverage for the region of the viral genome between nucleotide range 700-797. Positive results do not rule out bacterial infection or co-infection with other viruses.",
+        "citationsForAssayLimitations": ["35337015"],
+        "minimalMicrobeLoadTestCanDetect": "500 viral RNA copies/mL",
+        "citationsForMinimalMicrobeLoadTestCanDetect": ["35337015"],
+        "clinicalUtilities": [
+            {
+                "category": "Establish or confirm diagnosis",
+                "url": "https://www.lab_domain_name.com/COVID-19/clinical_utility/",
+                "citations": ["35337015"]                
+            },
+            {
+                "otherCategory": "Monitoring for Long COVID",
+                "url": "https://www.lab_domain_name.com/COVID-19/clinical_utility/",
+                "citations": ["35337015"]
+            }
+        ],
+        "conditionsOrPhenotypes": [
+            {
+                "name": "COVID-19",
+                "synonyms": ["Coronavirus disease 2019"]
+            }
+        ],
+        "testTargets": [
+            {
+                "microbeType": "virus",
+                "organism": "SARS-COV-2",
+                "genes": ["ORF1ab", "S"],
+                "chromosomalRegionOrMitochondrions": ["SARS-CoV-2 genome"]
+            }
+        ],
+        "howLongMicrobePresentAfterTherapy": "4 weeks",
+        "commentsAboutTestInterpretation": "Positive results indicate infection by SARS-CoV-2 but correlation with other clinical parameters is necessary. Positive results do not rule out bacterial infection or co-infection with other viruses. The agent detected may not be the definite cause of disease. Negative results do not exclude SARS-CoV-2 infection and patient management should be correlated with other clinical paramters. The sample collection protocol if not properly followed may hamper detection of the test target.",
+        "researchPerformedAfterClinicalTestingIsComplete": "Research on novel variants, if detected.",
+        "proficiencyTesting": {
+            "method": "Formal PT program",
+            "methodDescription": "SARS-CoV-2 molecular testing is performed across all assay platforms twice per year.",
+            "citationsForMethodDescription": ["https://www.lab_domain_name.com/COVID-19/proficiency_testing/"],
+            "provider": "Association for Molecular Pathology, AMP"
+        },
+        "internalTestValidationMethod": "Positive and negative controls are included in each assay run.",
+        "citationsForInternalTestValidationMethod": ["35337015"]
+    }
+}

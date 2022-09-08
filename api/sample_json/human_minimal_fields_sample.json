@@ -1,0 +1,163 @@
+{
+    "humanTest": {
+        "action": "add",
+        "labTestName": "Breast cancer clinical",
+        "testPurposes": [
+            "Prognostic",
+            "Recurrence",
+            "Therapeutic management"
+        ],
+        "testPerformanceLocations": ["Entire test performed in-house"],
+        "methods": [         
+            {
+                "methodCategory": "Mutation scanning of select exons",
+                "method": "Next-Generation (NGS)/Massively parallel sequencing (MPS)",
+                "instruments": [
+                    {"name": "Illumina HiSeq™2000 system"}
+                ]
+            }
+         ],
+        "analyticalValidity": "99% sensitive; 98% specific",
+        "testTargetsAssociated": [
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776",
+                            "labPreferredName": "Hereditary breast/ovarian cancer",
+                            "synonyms": ["Hereditary breast and ovarian cancer"],
+                            "labPreferredAcronym": "HBOCS",
+                            "acronyms": ["HBOC"],
+                            "modeOfInheritance": "Autosomal dominant inheritance",
+                            "diseaseMechanism": "loss of function",
+                            "prevalenceDescription": "High prevalence of individuals predisposed to HBOC in X population.",
+                            "prevalenceURL": "https://www.hbocs.org/prevalence",
+                            "citationsForPrevalence": ["PMID: 33643918"]
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        },
+                        {
+                            "ontologyDb": "HPO",
+                            "id": "HP:0003002"
+                        },
+                        {
+                            "ontologyDb": "MeSH",
+                            "id": "D001943"
+                        },
+                        {
+                            "ontologyDb": "OMIM",
+                            "id": "612555"     
+                        },
+                        {
+                            "ontologyDb": "Orphanet",
+                            "id": "227535 "
+                        }         
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "genes": [
+                        "BRCA1",
+                        "BRCA2"
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776"
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        },
+                        {
+                            "ontologyDb": "HPO",
+                            "id": "HP:0003002"
+                        },
+                        {
+                            "ontologyDb": "MeSH",
+                            "id": "D001943"
+                        },
+                        {
+                            "ontologyDb": "OMIM",
+                            "id": "612555"     
+                        },
+                        {
+                            "ontologyDb": "Orphanet",
+                            "id": "227535 "
+                        }         
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "geneWithVariants": [
+                        {
+                            "gene": "BRCA1",
+                            "variant": "NM_007294.4:c.5516T>C",
+                            "variantClinicalSignificance": "Pathogenic",
+                            "citationsForClinicalSignificance": ["PMID: 24830819"]
+                        },
+                        {
+                            "gene": "BRCA1",
+                            "variant": "NM_007294.4:c.5513T>A",
+                            "variantClinicalSignificance": "Pathogenic",
+                            "citationsForClinicalSignificance": ["PMID: 24830819"]
+                        }
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776"
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "geneWithRefSeqAndExons": [
+                        {
+                            "gene": "BRCA2",
+                            "refSeq": "NM_000059.4"
+                        }
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "Congenital chromosomal disease"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "chromosomalRegionOrMitochondrions": [
+                        "Human genome"
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "Congenital chromosomal disease"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "proteins": [
+                        "BRCA1 protein",
+                        "BRCA2 protein"
+                    ]
+                }
+           }
+       ]
+    }
+}

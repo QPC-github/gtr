@@ -1,0 +1,347 @@
+{
+    "humanTest": {
+        "action": "add",
+        "labTestName": "Breast cancer clinical",
+        "testOrderCode": "BCClin",
+        "labTestShortName": "Breast cancer clin",
+        "manufactureTestName": "Alpha Technologies™, Inc",
+        "testURL": "https://www.mylab.com/bcclin/test",
+        "searchTerms": [
+            "Breast Cancer",
+            "Neoplasm of the breast"
+        ],
+        "testPurposes": [
+            "Prognostic",
+            "Recurrence",
+            "Therapeutic management"
+        ],
+        "targetPopulation": "This test is indicated for use in postmenopausal women with early-stage (stages I, II and IIIA) breast cancer.",
+        "citationsForTargetPopulation": ["33643918", "33965400"],
+        "fdaReviews": [
+            {
+                "reviewed": true,
+                "reviewCategoryDesignation": "IVD - In Vitro Device.",
+                "reviewItem": "Assay(s)",
+                "regulatoryStatus": "Pending",
+                "fdaApplicationNumber": "00112233"
+            },
+            {
+                "reviewed": true,
+                "reviewCategoryDesignation": "IUO - Investigational Use Only. The performance characteristics of this product have not been established.",
+                "reviewItem": "Test kit(s)",
+                "regulatoryStatus": "Pending",
+                "fdaApplicationNumber": "00112287"
+            }
+        ],
+        "nysClep": {
+            "status": "Approved",
+            "testApprovalNumber": "9101"
+        },
+        "testDevelopment": "FDA-reviewed (has FDA test name)",
+        "howToOrder": "Complete the Requisition Form and check the box to enssure the understanding of the test assay indications.",
+        "orderURL": "https://www.mylab.com/bcclin/test",
+        "whoCanOrder": [
+            "Health Care Provider",
+            "Licensed Physician"
+        ],
+        "testCodeURL": "https://www.mylab.com/bcclin/BCClin",
+        "loincCodes": [
+            "85904-1",
+            "85338-2"
+        ],
+        "cptCodes": ["81404 "],
+        "informedConsentRequired": "Required",
+        "pretestGeneticCounselingRequired": "Not required",
+        "posttestGeneticCounselingRequired": "Not required",
+        "testServices": [
+            {
+                "testService": "Clinical Testing/Confirmation of Mutations Identified Previously",
+                "orderCode": "BCClin_testservice_1",
+                "comment": "Please call 1-800-BCC-test for questions about this test."
+            }
+        ],
+        "testAdditionalServices": [
+            {
+                "additionalService": "Custom mutation-specific/Carrier testing",
+                "orderCode": "BCClin_testservice_2",
+                "comment": "Please call 1-800-BCC-test for questions about this test."
+            }
+        ],
+        "specimen": {
+            "sources": [
+                "Fresh tissue",
+                "Frozen tissue",
+                "Isolated DNA"
+            ],
+            "otherSource": "Liquid biopsy",
+            "url": "https://www.mylab.com/bcclin/specimen"
+        },
+        "testingStrategy": "For missense amino acid changes of uncertain significance we employ analytic strategies to programs to predict whether a particular missense change is likely to be pathogenic. In addition, when appropriate we will test known affected and unaffected relatives at no charge to clarify variant classification",
+        "citationsForTestingStrategy": ["PMID: 24830819"],
+        "testContactPolicies": [
+        "Laboratory can only accept contact from health care providers. Patients/families are encouraged to discuss genetic testing options with their health care provider.",
+        "Post-test email/phone consultation regarding genetic test results and interpretation is provided to patients/families.",
+        "Pre-test email/phone consultation regarding genetic test results and interpretation is provided to patients/families."
+                ],
+        "testContactPersons": ["Marilu Hoeppner"],
+        "testPerformanceLocations": ["Entire test performed in-house"],
+        "commentForTestPerformanceLocation": "Test will be performed at the Olmstead location",
+        "methods": [
+            {                
+                "methodCategory": "Protein expression",
+                "method": "Microarray"
+            },
+            {                
+                "methodCategory": "Karyotyping",
+                "method": "G-banding"
+            },            
+            {
+                "methodCategory": "Mutation scanning of select exons",
+                "method": "Next-Generation (NGS)/Massively parallel sequencing (MPS)",
+                "instruments": [
+                    {"name": "Illumina HiSeq™2000 system"}
+                ]
+            },
+            {
+                "methodCategory": "Sequence analysis of select exons",
+                "otherMethod": "BCClin sequencing methodology",
+                "instruments": [
+                    {"otherInstrument": "New age instrument"}
+                ]
+            }
+        ],
+        "platforms": [
+            {"otherPlatform": "MiSeqDx System"}
+        ],
+        "testProcedureOrProtocol": "We perform NGS to determine mutations, such as exon copy number changes, and small insertions and deletions. We apply our proprietary sequencing technology to fine tune the analysis of all exons and nearby flanking intronic regions.",
+        "citationsForTestProcedureOrProtocol": ["PMID: 24830819"],
+        "testResultsConfirmation": "Confirmation is performed by analysis of a new aliquot of the patient sample. If possible, an alternative method is used for confirmation.",
+        "testComment": "More details on methodology and procedure can be found in the publication.",
+        "analyticalValidity": "99% sensitive; 98% specific",
+        "citationsForAnalyticalValidity": ["PMID: 24830819"],
+        "clinicalValidity": "BCClin has been incorporated into major oncology clinical guidelines.",
+        "citationsForClinicalValidity": [
+            "PMID: 24830819",
+            "PMID: 33643918"
+        ],
+        "assayLimitations": "This test cannot detect the ABC variant.",
+        "citationsForAssayLimitations": [
+            "PMID: 24830819",
+            "PMID: 33643918"
+        ],
+        "clinicalUtilities": [
+            {
+                "category": "Establish or confirm diagnosis",
+                "url": "https://www.mylab.com/bcclin/application",
+                "citations": ["PMID: 24830819"]
+            },
+            {
+                "category": "Guidance for management",
+                "url": "https://www.mylab.com/bcclin/application",
+                "citations": ["PMID: 24830819"]
+            },
+            {
+                "otherCategory": "Contribute to clinical guideline development",
+                "url": "https://www.mylab.com/bcclin/application",
+                "citations": ["PMID: 24830819"]
+            }
+        ],
+        "testTargetsAssociated": [
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776",
+                            "labPreferredName": "Hereditary breast/ovarian cancer",
+                            "synonyms": ["Hereditary breast and ovarian cancer"],
+                            "labPreferredAcronym": "HBOCS",
+                            "acronyms": ["HBOC"],
+                            "modeOfInheritance": "Autosomal dominant inheritance",
+                            "diseaseMechanism": "loss of function",
+                            "prevalenceDescription": "High prevalence of individuals predisposed to HBOC in X population.",
+                            "prevalenceURL": "https://www.hbocs.org/prevalence",
+                            "citationsForPrevalence": ["PMID: 33643918"]
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        },
+                        {
+                            "ontologyDb": "HPO",
+                            "id": "HP:0003002"
+                        },
+                        {
+                            "ontologyDb": "MeSH",
+                            "id": "D001943"
+                        },
+                        {
+                            "ontologyDb": "OMIM",
+                            "id": "612555"     
+                        },
+                        {
+                            "ontologyDb": "Orphanet",
+                            "id": "227535 "
+                        }         
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "genes": [
+                        "BRCA1",
+                        "BRCA2"
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776"
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        },
+                        {
+                            "ontologyDb": "HPO",
+                            "id": "HP:0003002"
+                        },
+                        {
+                            "ontologyDb": "MeSH",
+                            "id": "D001943"
+                        },
+                        {
+                            "ontologyDb": "Orphanet",
+                            "id": "227535 "
+                        }         
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "geneWithVariants": [
+                        {
+                            "gene": "BRCA1",
+                            "variant": "NM_007294.4:c.5516T>C",
+                            "variantClinicalSignificance": "Pathogenic",
+                            "citationsForClinicalSignificance": ["PMID: 24830819"]
+                        },
+                        {
+                            "gene": "BRCA1",
+                            "variant": "NM_007294.4:c.5513T>A",
+                            "variantClinicalSignificance": "Pathogenic",
+                            "citationsForClinicalSignificance": ["PMID: 24830819"]
+                        }
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "ontologyDb": "MedGen",
+                            "id": "C0677776"
+                        },
+                        {
+                            "ontologyDb": "MONDO",
+                            "id": "MONDO_0011450"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "geneWithRefSeqAndExons": [
+                        {
+                            "gene": "BRCA2",
+                            "refSeq": "NM_000059.4"
+                        }
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "name": "Congenital chromosomal disease"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "chromosomalRegionOrMitochondrions": [
+                        "Human genome"
+                    ]
+                }
+            },
+            {
+                "conditionsOrPhenotypes": [
+                        {
+                            "name": "Congenital chromosomal disease"
+                        }
+                    ],
+                "origins": ["Germline"],
+                "targetsTested": {
+                    "proteins": [
+                        "BRCA1 protein",
+                        "BRCA2 protein"
+                    ]
+                    }
+                }
+            ],
+            "testTargetUnassociated": {
+            "conditionsOrPhenotypes": [
+                {
+                    "ontologyDb": "MONDO",
+                    "id": "MONDO:0012933"
+                },
+                {
+                    "ontologyDb": "MONDO",
+                    "id": "MONDO:0013253"
+                },
+                {
+                    "ontologyDb": "MONDO",
+                    "id": " MONDO:0015278"
+                }
+               
+            ],
+            "origins": ["Germline", "Somatic"],
+            "targetsTested": {
+                "genes": ["MLXIP", "MLXIPL", "CHEK2", "MSH6", "RAD51", "PALB2", "CDH1"],
+                "chromosomalRegionOrMitochondrions": ["16p12.2"],
+                "geneWithVariants": [
+                    {
+                        "gene": "PALB2",
+                        "variant": "NM_024675.4(PALB2):c.2753C>A (p.Pro918Gln)",
+                        "variantClinicalSignificance": "Uncertain significance",
+                        "citationsForClinicalSignificance": ["PMID: 28024868", "PMID: 29706558"]
+                    }
+                ],
+                "geneWithRefSeqAndExons": [
+                    {
+                        "gene": "RAD51",
+                        "refSeq": "NM_002875.5",
+                        "exons": "All"
+                    }
+                ]
+            }
+        },
+        "vus": {
+            "protocolForInterpretingVariationAsVUS": "If a VUS is found we perform a thorough check of all exons.  We perform a literature search as well.",
+            "softwareUsedToInterpretNovelVariations": "SIFT, Polyphen-2, AlignGVGD, MutationTaster, SpliceSiteFinder-like, MaxEntScan, NNSPLICE, GeneSplicer, Human Splicing Find",
+            "labPolicyOnReportingNovelVariations": "A report is sent which indicates the level of uncertainty and asks for samples from parents, or other relatives as appropriate.",
+            "areFamilyMembersRecruitedWithoutCharge": "Yes",
+            "commentsAboutRecruitingFamilyMembers": "*Please call. Offered on a case-by-case basis.",
+            "willLabRecontactOrderingPhysicanIfVariantInterpretationChanges": "Yes",
+            "commentsAboutRecontactingOrderingPhysican": "The repeat sample analysis is reported by phone and fax to the referring lab and physician.",
+            "researchPerformedAfterClinicalTestingIsComplete": "If consent is given we may use samples for research."
+        },
+        "proficiencyTesting": {
+            "method": "Formal PT program",
+            "methodDescription": "We engage in a formal PT program, informal inter-laboratory proficiency testing as well as intra-laboratory testing.",
+            "citationsForMethodDescription": ["PMID: 24830819", "33965400"],
+            "provider": "College of American Pathologists, CAP"
+        },
+        "internalTestValidationMethod": "Tests are performed with normal controls and controls with abnormal ranges.",
+        "citationsForInternalTestValidationMethod": ["PMID: 33643918"],
+        "caps": [
+            {
+                "majorCapCategory": "Molecular Genetics",
+                "capCategory": "BRCA1/2",
+                "capTest": "MGL3"
+            }
+        ]
+    }
+}

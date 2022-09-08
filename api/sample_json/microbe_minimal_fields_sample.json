@@ -1,0 +1,36 @@
+{
+    "microbeTest": {
+        "action": "add",
+        "labTestName": "COVID-19 Whole Genome Sequencing (WGS)",
+        "testPurposes": [
+            "Microbe identification",
+            "Screening"
+        ],
+        "testPerformanceLocations": ["Entire test performed in-house"],
+        "methods": [
+            {
+                "methodCategory": "Sequence analysis of the entire coding region",
+                "method": "Next-Generation (NGS)/Massively parallel sequencing (MPS)"
+            },
+            {
+                "methodCategory": "Targeted variant analysis",
+                "method": "Multiplex real-time PCR"
+            }
+        ],
+        "analyticalValidity": "95% Sensitivity, 98% Specificity",
+        "conditionsOrPhenotypes": [
+            {
+                "name": "COVID-19",
+                "synonyms": ["Coronavirus disease 2019"]
+            }
+        ],
+         "testTargets": [
+            {
+                "microbeType": "virus",
+                "organism": "SARS-COV-2",
+                "genes": ["ORF1ab", "S"],
+                "chromosomalRegionOrMitochondrions": ["SARS-CoV-2 genome"]
+            }
+        ]
+    }
+}
