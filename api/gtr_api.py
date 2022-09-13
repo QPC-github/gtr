@@ -23,7 +23,7 @@ def get_parameters(actions):
     parser.add_argument('mode', nargs='?', help='submission mode',
                         choices=['api', 'apitest'])
     parser.add_argument('additional_data', nargs='?', help='additional data to perform the action.\n'
-                        'For gtr_sub_api, this is the json file.\n'
+                        'For gtr_sub_api or dry_run, this is the json file.\n'
                         'For gtr_get_action, this is the submission ID.\n'
                         'For multi_subs, this is the text file of json file name list.\n'
                         'For multi_deletes, this is the text file of GTR accession list.')
@@ -41,6 +41,8 @@ def get_parameters(actions):
 
 def gtr_sub_api_json(mode, json_data, **kwargs):
     url = f'{base_url}/{mode}/v1/submissions/'
+    if 'dry_run' in kwargs and kwargs.get('dry_run'):
+        url = url + '?dry-run=true'
     post_data_obj = {
         'actions': [{'type':'AddData', 'targetDb':'GTR', 'data':{ 'content':json_data }}]
     }
@@ -57,6 +59,12 @@ def gtr_sub_api(mode, json_file):
     with open(json_file) as jf:
         json_data = json.load(jf)
     gtr_sub_api_json(mode, json_data, file=json_file)
+
+def dry_run(mode, json_file):
+    json_data = {}
+    with open(json_file) as jf:
+        json_data = json.load(jf)
+    gtr_sub_api_json(mode, json_data, file=json_file, dry_run=True)
 
 def gtr_get_action(mode, sub_id):
     url = f'{base_url}/{mode}/v1/submissions/{sub_id}/actions/'
@@ -89,6 +97,7 @@ def main():
         "gtr_get_action": gtr_get_action,
         "multi_subs": multi_subs,
         "multi_deletes": multi_deletes,
+        "dry_run": dry_run,
     }
     (action, mode, additional_data) = get_parameters(cmd2process.keys())
     return cmd2process[action](mode, additional_data)
