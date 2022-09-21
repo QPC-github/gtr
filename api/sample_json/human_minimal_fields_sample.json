@@ -132,8 +132,7 @@
             {
                 "conditionsOrPhenotypes": [
                         {
-                            "ontologyDb": "MedGen",
-                            "id": "Congenital chromosomal disease"
+                            "name": "Congenital chromosomal disease"
                         }
                     ],
                 "origins": ["Germline"],
@@ -146,8 +145,7 @@
             {
                 "conditionsOrPhenotypes": [
                         {
-                            "ontologyDb": "MedGen",
-                            "id": "Congenital chromosomal disease"
+                            "name": "Congenital chromosomal disease"
                         }
                     ],
                 "origins": ["Germline"],
