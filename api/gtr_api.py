@@ -7,7 +7,7 @@ import os
 import argparse
 
 script = sys.argv[0]
-base_url="https://dsubmit.ncbi.nlm.nih.gov"
+base_url="https://submit.ncbi.nlm.nih.gov"
 gtr_headers = {
     'Content-Type': 'application/json',
     'SP-API-KEY': 'YOUR-API-KEY'
